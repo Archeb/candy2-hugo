@@ -15,6 +15,35 @@
         eventHandlersSetup: false
     };
 
+    /**
+     * Update navigation link-item-selected state based on current URL
+     */
+    function updateNavigationState(url) {
+        const currentPath = new URL(url, window.location.origin).pathname;
+        const linkItems = document.querySelectorAll('.bean-main .link-item');
+
+        linkItems.forEach(link => {
+            link.classList.remove('link-item-selected');
+            const linkPath = new URL(link.href, window.location.origin).pathname;
+
+            // Exact match only (ignoring search params)
+            if (currentPath === linkPath) {
+                link.classList.add('link-item-selected');
+            }
+        });
+    }
+
+    /**
+     * Collapse bean-main to mini state
+     */
+    function collapseBeanMain() {
+        const beanMain = document.querySelector('.bean-main');
+        if (beanMain && !state.mobileMode) {
+            state.isBeanMini = true;
+            beanMain.classList.add('bean-main-mini');
+        }
+    }
+
     // Initialize on DOM ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
@@ -35,6 +64,9 @@
         // Initial state
         checkMobileMode();
 
+        // Update navigation state on initial load
+        updateNavigationState(window.location.href);
+
         // Restore scroll position if returning from modal
         restoreScrollPosition();
     }
@@ -49,7 +81,7 @@
         if (!container) return;
 
         // Calculate threshold: 45% of viewport width - 99px (as in original)
-        state.scrollThreshold = Math.floor(window.innerWidth * 0.45 - 99);
+        state.scrollThreshold = Math.floor(window.innerWidth * 0.45 - 100);
 
         // Track if posts have been revealed
         let postsRevealed = false;
@@ -283,37 +315,58 @@
     async function navigateToListPage(url, newDoc, scrollData) {
         const newContainer = newDoc.querySelector('#contained-containers');
         const currentContainer = document.querySelector('#contained-containers');
+        const container = document.getElementById('container');
 
         if (!newContainer || !currentContainer) {
             return navigateDefault(url, newDoc, scrollData);
         }
 
+        // Reset scroll position to threshold
+        if (container) {
+            container.scrollLeft = state.scrollThreshold;
+
+        }
+
+        // Collapse bean-main to mini state
+        collapseBeanMain();
+
         const transition = document.startViewTransition(() => {
-            // Fade out animation
+            // Phase 1: Float old content upward
             currentContainer.style.opacity = '0';
-            currentContainer.style.transform = 'translateY(20px)';
+            currentContainer.style.transform = 'translateY(-50px)';
+            currentContainer.style.transition = 'opacity 0.3s ease, transform 0.4s cubic-bezier(0.68, 0, 0.33, 1)';
 
             setTimeout(() => {
                 // Replace content
                 currentContainer.innerHTML = newContainer.innerHTML;
                 document.title = newDoc.title;
 
-                // Fade in animation
-                currentContainer.style.opacity = '1';
-                currentContainer.style.transform = 'translateY(0)';
-                currentContainer.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-            }, 100);
+                // Phase 2: Slide new content from right
+                currentContainer.style.opacity = '0';
+                currentContainer.style.visibility = 'visible';
+                currentContainer.style.transform = 'translateX(100px)';
+                currentContainer.style.transition = 'none';
+
+                requestAnimationFrame(() => {
+                    currentContainer.style.transition = 'opacity 0.4s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                    currentContainer.style.opacity = '1';
+                    currentContainer.style.transform = 'translateX(0)';
+                });
+            }, 300);
         });
 
         await transition.finished;
 
+        // Update navigation state
+        updateNavigationState(url);
+
         // Update URL
-        const state = {
+        const historyState = {
             page: 'list',
             url: url,
             scrollPosition: scrollData
         };
-        history.pushState(state, '', url);
+        history.pushState(historyState, '', url);
     }
 
     /**
@@ -556,6 +609,14 @@
             const html = await response.text();
             const parser = new DOMParser();
             const newDoc = parser.parseFromString(html, 'text/html');
+
+            // Check if this is a list page navigation
+            if (isListPage(url) || url === window.location.origin + '/' || url === '/') {
+                // Use enhanced list page navigation
+                const scrollData = saveScrollPosition();
+                await navigateToListPage(url, newDoc, scrollData);
+                return;
+            }
 
             const transition = document.startViewTransition(() => {
                 // Replace main content

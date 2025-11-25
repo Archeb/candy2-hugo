@@ -5,7 +5,7 @@
         style="opacity: 0; visibility: hidden; transform: translateX(100vw);">
         <div class="contained-beans" style="transform: translate(0px, 0vh);">
             {{ range (where .Site.RegularPages "Type" "posts").ByDate.Reverse }}
-            <a href="{{ .Permalink }}" class="bean bean-article" style="background-image: url('{{ if .Params.image }}{{ .Params.image }}{{ else }}{{ .Site.Params.defaultImage | default "/img/cover1.jpg" }}{{ end }}');">
+            <a href="{{ .Permalink }}" class="bean bean-article" style="background-image: url('{{ if .Params.featuredImage }}{{ .Params.featuredImage }}{{ else }}{{ .Site.Params.defaultImage | default "/img/cover1.jpg" }}{{ end }}');">
                 <div class="article-category">
                     <div class="category-item">
                         <div class="item-text">{{ .Date.Format "2006年1月2日" }}</div>
@@ -19,7 +19,7 @@
                 <div class="article-title">
                     <span>{{ .Title }}</span>
                     <div class="article-summary">
-                        {{ if .Summary }}{{ .Summary }}{{ else }}{{ .Description }}{{ end }}
+                        {{ .Description | safeHTML }}
                     </div>
                 </div>
             </a>

@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html lang="{{ .Site.Language.Lang | default "zh-CN" }}">
+<html lang="{{ .Site.Language.Lang | default " zh-CN" }}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="{{ .Site.BaseURL }}">
     <title>{{ if not .IsHome }}{{ .Title }} - {{ end }}{{ .Site.Title }}</title>
-    <meta name="description" content="{{ if .Description }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
-    {{ if .Site.Params.author }}<meta name="author" content="{{ .Site.Params.author }}">{{ end }}
+    <meta name="description"
+        content="{{ if .Description }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+    {{ if .Site.Params.author }}
+    <meta name="author" content="{{ .Site.Params.author }}">{{ end }}
     {{ $style := resources.Get "scss/style.scss" }}
     {{ $style = $style | css.Sass | resources.Minify }}
     {{ if hugo.IsProduction }}
@@ -15,8 +19,10 @@
     <meta name="view-transition" content="same-origin">
     {{ block "head" . }}{{ end }}
 </head>
+
 <body>
     {{ block "main" . }}{{ end }}
     <script src="{{ "js/candy2.js" | relURL }}"></script>
 </body>
+
 </html>

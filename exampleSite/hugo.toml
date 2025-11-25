@@ -27,25 +27,25 @@ theme = 'candy2'
 
 [[menu.main]]
   name = "技术"
-  url = "/tags/tech/"
+  url = "/categories/%E6%8A%80%E6%9C%AF/"
   weight = 2
   pre = ""
 
 [[menu.main]]
-  name = "旅行"  
-  url = "/tags/travel/"
+  name = "日常"
+  url = "/categories/日常/"
   weight = 3
   pre = ""
 
 [[menu.main]]
   name = "链接"
-  url = "/links"
+  url = "/links/"
   weight = 4
   pre = "&#xe614;"
 
 [[menu.main]]
   name = "关于"
-  url = "/about/"
+  url = "/authors/蚊子/"
   weight = 5
   pre = ""
 
