@@ -1,0 +1,45 @@
+{{ define "main" }}
+<div class="modal" style="visibility: visible; background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(20px);">
+    <div class="bean bean-read" style="transform: translate(0, 0);">
+        <div class="modal-close">×</div>
+        <div class="article-cover" style="background-image: url('{{ if .Params.image }}{{ .Params.image }}{{ else }}{{ .Site.Params.defaultImage | default "/img/cover1.jpg" }}{{ end }}');">
+            <div class="article-category">
+                <div class="category-item">
+                    <div class="item-text">{{ .Date.Format "2006年1月2日" }}</div>
+                </div>
+                {{ range .Params.tags }}
+                <div class="category-item">
+                    <div class="item-text">{{ . }}</div>
+                </div>
+                {{ end }}
+            </div>
+            <div class="article-title">{{ .Title }}</div>
+        </div>
+        <div class="article-banner">
+            <div class="banner-author">
+                {{ if .Site.Params.authorImage }}
+                <div class="author-avatar">
+                    <img src="{{ .Site.Params.authorImage }}" alt="{{ .Site.Params.author }}">
+                </div>
+                {{ end }}
+                <span>{{ .Site.Params.author | default "作者" }}</span>
+                <span class="publish-time">{{ .Date.Format "2006年1月2日" }}</span>
+            </div>
+            <div class="banner-tools">阅读共需 {{ .ReadingTime }} 分钟</div>
+        </div>
+        <div class="article-content">
+            {{ .Content }}
+        </div>
+        {{ if .Params.tags }}
+        <div class="article-tags">
+            <span class="tags-label">Tags:</span>
+            <ul class="tags-list">
+                {{ range .Params.tags }}
+                <li><a href="/tags/{{ . | urlize }}/">{{ . }}</a></li>
+                {{ end }}
+            </ul>
+        </div>
+        {{ end }}
+    </div>
+</div>
+{{ end }}

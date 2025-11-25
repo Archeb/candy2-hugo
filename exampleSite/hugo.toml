@@ -1,0 +1,44 @@
+baseURL = 'https://example.com/'
+languageCode = 'zh-CN'
+title = 'Candy2 Hugo Blog'
+theme = 'candy2'
+
+# Note: When using this exampleSite, the theme is located at ../../
+# Hugo will automatically find it when you run from exampleSite directory
+
+[pagination]
+  pagerSize = 10
+
+[params]
+  author = "Candy2 Hugo"
+  description = "A beautiful Hugo blog theme"
+  avatar = "/img/icon-circle.png"
+  defaultImage = "/img/cover1.jpg"
+  copyright = "© 2024"
+  authorImage = "/img/icon-circle.png"
+
+[markup]
+  [markup.highlight]
+    style = 'monokai'
+    lineNos = false
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[[menu.main]]
+  name = "技术"
+  url = "/tags/tech/"
+  weight = 2
+  pre = "&#xe614;"
+
+[[menu.main]]
+  name = "旅行"  
+  url = "/tags/travel/"
+  weight = 3
+  pre = ""
+
+[[menu.main]]
+  name = "关于"
+  url = "/about/"
+  weight = 4
+  pre = ""

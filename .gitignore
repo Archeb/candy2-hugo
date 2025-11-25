@@ -1,0 +1,28 @@
+# Hugo
+public/
+resources/
+.hugo_build.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.zip
+dist/
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj*
+*.sln
+*.sw?
+
+# Temporary files
+*.log
+.tmp/
+
+# Node (legacy)
+node_modules/

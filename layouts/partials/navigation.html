@@ -1,0 +1,26 @@
+<div class="bean bean-main">
+    <div class="avatar">
+        <img src="{{ .Site.Params.avatar | default "/img/icon-circle.png" }}" alt="{{ .Site.Title }}">
+    </div>
+    <div class="blog-name">{{ .Site.Title }}</div>
+    <div class="links">
+        <a class="link-item {{ if .IsHome }}link-item-selected{{ end }}" href="{{ "/" | relURL }}">
+            <div class="link-container">
+                <span class="link-icon"></span>
+                <span class="link-text">&nbsp;文章</span>
+            </div>
+        </a>
+        {{ range .Site.Menus.main }}
+        <a class="link-item {{ if $.IsMenuCurrent "main" . }}link-item-selected{{ end }}" href="{{ .URL }}">
+            <div class="link-container">
+                <span class="link-icon">{{ .Pre | safeHTML }}</span>
+                <span class="link-text">&nbsp;{{ .Name }}</span>
+            </div>
+        </a>
+        {{ end }}
+    </div>
+    <div class="meta-info">
+        <span class="show">{{ .Site.Params.copyright | default "© 2024" }}<br />Made With ♥</span>
+        <span class="hide">Theme Candy 2 By <a href="https://github.com/Archeb/candy2-hugo">Candy2-Hugo</a></span>
+    </div>
+</div>
