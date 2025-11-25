@@ -1,4 +1,35 @@
 {{ define "main" }}
+<!-- Background container with navigation and posts (shown when modal is closed) -->
+<div class="container" id="container">
+    {{ partial "navigation.html" . }}
+    <div id="contained-containers" class="contained-containers" style="opacity: 1; visibility: visible;">
+        <div class="contained-beans" style="transform: translate(0px, 0vh);">
+            {{ range (where .Site.RegularPages "Type" "posts").ByDate.Reverse }}
+            <a href="{{ .Permalink }}" class="bean bean-article" style="background-image: url('{{ if .Params.image }}{{ .Params.image }}{{ else }}{{ .Site.Params.defaultImage | default "/img/cover1.jpg" }}{{ end }}');">
+                <div class="article-category">
+                    <div class="category-item">
+                        <div class="item-text">{{ .Date.Format "2006年1月2日" }}</div>
+                    </div>
+                    {{ range .Params.tags }}
+                    <div class="category-item">
+                        <div class="item-text">{{ . }}</div>
+                    </div>
+                    {{ end }}
+                </div>
+                <div class="article-title">
+                    <span>{{ .Title }}</span>
+                    <div class="article-summary">
+                        {{ if .Summary }}{{ .Summary }}{{ else }}{{ .Description }}{{ end }}
+                    </div>
+                </div>
+            </a>
+            {{ end }}
+            <div class="bean-space"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal overlay for the single post -->
 <div class="modal" style="visibility: visible; background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(20px);">
     <div class="bean bean-read" style="transform: translate(0, 0);">
         <div class="modal-close">×</div>

@@ -1,6 +1,6 @@
 baseURL = 'https://example.com/'
 languageCode = 'zh-CN'
-title = 'Candy2 Hugo Blog'
+title = 'Candy2'
 theme = 'candy2'
 
 # Note: When using this exampleSite, the theme is located at ../../
@@ -10,7 +10,7 @@ theme = 'candy2'
   pagerSize = 10
 
 [params]
-  author = "Candy2 Hugo"
+  author = "mozzie"
   description = "A beautiful Hugo blog theme"
   avatar = "/img/icon-circle.png"
   defaultImage = "/img/cover1.jpg"
@@ -29,16 +29,23 @@ theme = 'candy2'
   name = "技术"
   url = "/tags/tech/"
   weight = 2
-  pre = "&#xe614;"
+  pre = ""
 
 [[menu.main]]
   name = "旅行"  
   url = "/tags/travel/"
   weight = 3
-  pre = ""
+  pre = ""
+
+[[menu.main]]
+  name = "链接"
+  url = "/links"
+  weight = 4
+  pre = "&#xe614;"
 
 [[menu.main]]
   name = "关于"
   url = "/about/"
-  weight = 4
-  pre = ""
+  weight = 5
+  pre = ""
+

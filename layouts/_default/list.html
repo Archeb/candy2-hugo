@@ -1,7 +1,7 @@
 {{ define "main" }}
 <div class="container" id="container">
     {{ partial "navigation.html" . }}
-    <div class="contained-containers" style="opacity: 1; visibility: visible;">
+    <div id="contained-containers" class="contained-containers" style="opacity: 1; visibility: visible;">
         <div class="contained-beans" style="transform: translate(0px, 0vh);">
             {{ $paginator := .Paginate .Pages }}
             {{ range $index, $page := $paginator.Pages }}
