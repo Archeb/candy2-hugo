@@ -1,8 +1,8 @@
 {{ define "main" }}
 <div class="container" id="container">
     {{ partial "navigation.html" . }}
-    <div id="contained-containers" class="contained-containers" style="opacity: 0; visibility: hidden; transform: translateX(100vw);">
-        <div class="contained-beans" style="transform: translate(0px, 0vh);">
+    <div id="contained-containers" class="contained-containers">
+        <div class="contained-beans">
             {{ $paginator := .Paginate .Pages }}
             {{ range $index, $page := $paginator.Pages }}
             <a href="{{ .Permalink }}" class="bean bean-article" style="background-image: url('{{ if .Params.featuredImage }}{{ .Params.featuredImage }}{{ else }}{{ .Site.Params.defaultImage | default "/img/cover1.jpg" }}{{ end }}');">

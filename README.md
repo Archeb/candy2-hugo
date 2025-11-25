@@ -60,7 +60,7 @@ hugo version
      description = "Your site description"
      avatar = "/img/icon-circle.png"
      defaultImage = "/img/cover1.jpg"
-     copyright = "© 2024"
+     copyright = "© 2025"
 
    [[menu.main]]
      name = "文章"

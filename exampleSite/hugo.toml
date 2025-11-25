@@ -5,6 +5,8 @@ theme = 'candy2'
 
 # Note: When using this exampleSite, the theme is located at ../../
 # Hugo will automatically find it when you run from exampleSite directory
+[build]
+  cleanDestinationDir = true
 
 [pagination]
   pagerSize = 10

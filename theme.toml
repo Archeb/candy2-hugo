@@ -11,7 +11,7 @@ features = ["responsive", "blog", "horizontal-scrolling", "glassmorphism", "view
 min_version = "0.152.2"
 
 [author]
-  name = "Archeb (original), Archeb (Hugo conversion)"
+  name = "Archeb (original & Hugo port), Someone (Hugo port)"
   homepage = "https://github.com/Archeb/candy2-hugo"
 
 [original]

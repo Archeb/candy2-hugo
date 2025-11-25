@@ -43,6 +43,9 @@ a {
 	height: 100%;
 	align-items: center;
 	overflow-y: hidden;
+	/* Create a new stacking context to contain view-transitions */
+	isolation: isolate;
+	position: relative;
 }
 
 .bean-space {
@@ -54,7 +57,6 @@ a {
 .contained-containers {
 	height: 100%;
 	opacity: 0;
-	transform: translate(0, 0);
 	will-change: transform;
 	display: flex;
 	flex-direction: column;
@@ -91,7 +93,8 @@ a {
 	position: sticky;
 	overflow: hidden;
 	transition: all 0.3s;
-	z-index: 2;
+	z-index: 10;
+
 
 	.avatar {
 		display: flex;
@@ -599,8 +602,6 @@ a {
 			padding: 25px 30px 40px;
 			text-shadow: 0 0 5px rgba(35, 35, 35, 0.5), 0 0 5px rgba(35, 35, 35, 0.5);
 			font-size: 32px;
-			overflow-x: scroll;
-			white-space: nowrap;
 			background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.6));
 		}
 
@@ -822,12 +823,6 @@ a {
 				::-webkit-scrollbar-thumb:active {
 					background-color: rgba(255, 255, 255, 0.55);
 				}
-
-				code {
-					max-height: 350px;
-					margin: 0 !important;
-					padding: 15px 20px !important;
-				}
 			}
 
 			code {
@@ -841,6 +836,24 @@ a {
 				font-size: 14px;
 				margin: 0 5px;
 			}
+
+			pre {
+				font-family: "monospace", Consolas, "Microsoft YaHei Light";
+				font-size: 14px;
+				background-color: #333333;
+				color: white;
+				padding: 2px 20px;
+				line-height: 1.8em;
+				border-radius: 3px;
+				font-size: 14px;
+				margin: 0 5px;
+
+				code {
+					padding: 0;
+					border-radius: 0;
+				}
+			}
+
 
 			// GhostBlog 样式
 
@@ -1454,6 +1467,140 @@ a {
 	}
 }
 
+
+/* No Backdrop Blur Fallback */
+.no-backdrop-blur {
+	backdrop-filter: none !important;
+}
+
+.no-backdrop-blur-read {
+	backdrop-filter: none !important;
+}
+
+@supports not (backdrop-filter: blur(15px)) {
+	.bean {
+		background-color: rgba(223, 242, 255, 0.8);
+	}
+
+	.article-banner {
+		background-color: rgba(255, 255, 255, 0.95) !important;
+	}
+}
+
+@keyframes fade-out {
+	from {
+		opacity: 1;
+	}
+
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+/* Modal initially hidden */
+.modal {
+	pointer-events: none;
+}
+
+.modal:not([style*="visibility: hidden"]) {
+	pointer-events: auto;
+}
+
+/* Smooth transitions for bean-main state change */
+.bean-main {
+	will-change: width, margin-left;
+}
+
+/* Contained beans - this is what gets replaced, so it needs view-transition-name */
+.contained-beans {
+	view-transition-name: article-list;
+}
+
+/* Initial hidden state for containers */
+.containers-hidden {
+	opacity: 0;
+	visibility: hidden;
+	transform: translateX(100vw);
+}
+
+/* Visible state with slide-in animation */
+.containers-visible {
+	opacity: 1;
+	visibility: visible;
+	transform: translateX(0);
+	transition: transform 0.5s cubic-bezier(0.68, 0, 0.33, 1), opacity 0.5s;
+}
+
+/* Appended modal styles - for single pages */
+.modal.appended-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 100;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* View Transition API animations for list pages */
+
+/* Disable default size interpolation - keep original sizes */
+::view-transition-group(article-list) {
+	animation-duration: 0.5s;
+}
+
+/* Old content (exiting): float upward - no size change */
+::view-transition-old(article-list) {
+	animation: float-up-out 0.4s cubic-bezier(0.68, 0, 0.33, 1) forwards;
+	/* Prevent default width/height interpolation */
+	width: fit-content;
+	height: 100%;
+	/* Ensure it doesn't cover navigation */
+	mix-blend-mode: normal;
+}
+
+/* New content (entering): slide in from right - no size change */
+::view-transition-new(article-list) {
+	animation: slide-in-right 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s backwards;
+	/* Prevent default width/height interpolation */
+	width: fit-content;
+	height: 100%;
+}
+
+@keyframes float-up-out {
+	from {
+		opacity: 1;
+	}
+
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes slide-in-right {
+	from {
+		opacity: 0;
+		transform: translateX(100px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
 /* Mobile Responsive Styles */
 @media (max-width: 991px) {
 	body {
@@ -1471,10 +1618,10 @@ a {
 	.contained-containers {
 		margin-top: 40px;
 		height: auto;
-		margin-left: 9px;
 		flex-direction: row;
 		transform: translate(0, 0);
-		width: auto;
+		width: 100vw;
+		height: fit-content;
 		opacity: 1 !important;
 		visibility: visible !important;
 	}
@@ -1566,76 +1713,32 @@ a {
 	.modal-close {
 		display: block;
 	}
-}
 
-/* No Backdrop Blur Fallback */
-.no-backdrop-blur {
-	backdrop-filter: none !important;
-}
-
-.no-backdrop-blur-read {
-	backdrop-filter: none !important;
-}
-
-@supports not (backdrop-filter: blur(15px)) {
-	.bean {
-		background-color: rgba(223, 242, 255, 0.8);
+	/* Disable default size interpolation - keep original sizes */
+	::view-transition-group(article-list) {
+		animation-duration: 0.5s;
+		width: 100%;
 	}
 
-	.article-banner {
-		background-color: rgba(255, 255, 255, 0.95) !important;
-	}
-}
-
-@keyframes fade-out {
-	from {
-		opacity: 1;
-	}
-
-	to {
-		opacity: 0;
-	}
-}
-
-@keyframes fade-in {
-	from {
-		opacity: 0;
+	/* Old content (exiting): float upward - no size change */
+	::view-transition-old(article-list) {
+		animation: float-up-out 0.4s cubic-bezier(0.68, 0, 0.33, 1) forwards;
+		/* Prevent default width/height interpolation */
+		height: fit-content;
+		width: 100%;
+		/* Ensure it doesn't cover navigation */
+		mix-blend-mode: normal;
 	}
 
-	to {
-		opacity: 1;
+	/* New content (entering): slide in from right - no size change */
+	::view-transition-new(article-list) {
+		animation: slide-in-right 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s backwards;
+		/* Prevent default width/height interpolation */
+		height: fit-content;
+		width: 100%;
 	}
-}
 
-/* Modal initially hidden */
-.modal {
-	pointer-events: none;
-}
-
-.modal:not([style*="visibility: hidden"]) {
-	pointer-events: auto;
-}
-
-/* Smooth transitions for bean-main state change */
-.bean-main {
-	will-change: width, margin-left;
-}
-
-/* Contained containers initial state */
-.contained-containers {
-	will-change: opacity, visibility;
-	transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-/* Appended modal styles - for single pages */
-.modal.appended-modal {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	z-index: 100;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	::-webkit-scrollbar {
+		width: 0px;
+	}
 }

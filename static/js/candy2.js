@@ -52,9 +52,6 @@
     }
 
     function init() {
-        // Check for hash-based scroll position first
-        checkHashScrollPosition();
-
         setupBeanMainScroll();
         setupArticleModal();
         setupViewTransitions();
@@ -66,9 +63,6 @@
 
         // Update navigation state on initial load
         updateNavigationState(window.location.href);
-
-        // Restore scroll position if returning from modal
-        restoreScrollPosition();
     }
 
     /**
@@ -154,9 +148,6 @@
         if (articleLink && articleLink.href) {
             e.preventDefault();
 
-            // Save current scroll position
-            saveScrollPosition();
-
             // Navigate to article page with View Transitions
             navigateToArticle(articleLink.href);
             return;
@@ -210,49 +201,7 @@
         return document.querySelector('.modal') !== null;
     }
 
-    /**
-     * Save scroll position using history state and hash
-     */
-    function saveScrollPosition() {
-        const container = document.getElementById('container');
-        if (container) {
-            const scrollData = {
-                scrollLeft: container.scrollLeft,
-                scrollTop: container.scrollTop
-            };
-            // Store in both sessionStorage and history state for reliability
-            sessionStorage.setItem('scrollPosition', JSON.stringify(scrollData));
-            return scrollData;
-        }
-        return null;
-    }
 
-    /**
-     * Restore scroll position from history state or sessionStorage
-     */
-    function restoreScrollPosition() {
-        const container = document.getElementById('container');
-        if (!container) return;
-
-        // Try to get scroll position from sessionStorage
-        const scrollDataStr = sessionStorage.getItem('scrollPosition');
-        if (scrollDataStr) {
-            try {
-                const scrollData = JSON.parse(scrollDataStr);
-
-                // Use requestAnimationFrame to ensure DOM is ready
-                requestAnimationFrame(() => {
-                    container.scrollLeft = scrollData.scrollLeft || 0;
-                    container.scrollTop = scrollData.scrollTop || 0;
-                });
-
-                // Clear after restoring
-                sessionStorage.removeItem('scrollPosition');
-            } catch (e) {
-                console.error('Error restoring scroll position:', e);
-            }
-        }
-    }
 
     /**
      * Check if URL is a list page (tags, categories, etc)
@@ -274,13 +223,9 @@
      * Navigate to article page with View Transitions and scale-up animation
      */
     async function navigateToArticle(url) {
-        // Save scroll position with history state
-        const scrollData = saveScrollPosition();
-
         if (!document.startViewTransition) {
-            // Fallback to normal navigation with hash
-            const urlWithHash = url + (scrollData ? `#scroll-${scrollData.scrollLeft}` : '');
-            window.location.href = urlWithHash;
+            // Fallback to normal navigation
+            window.location.href = url;
             return;
         }
 
@@ -293,66 +238,50 @@
             // Check page type and handle accordingly
             if (isListPage(url)) {
                 // For list pages: replace content in #contained-containers
-                await navigateToListPage(url, newDoc, scrollData);
+                await navigateToListPage(url, newDoc);
             } else if (isSinglePage(url)) {
                 // For single pages: append modal with animation
-                await navigateToSinglePage(url, newDoc, scrollData);
+                await navigateToSinglePage(url, newDoc);
             } else {
                 // Default behavior: replace entire body
-                await navigateDefault(url, newDoc, scrollData);
+                await navigateDefault(url, newDoc);
             }
 
         } catch (error) {
             console.error('Navigation error:', error);
-            const urlWithHash = url + (scrollData ? `#scroll-${scrollData.scrollLeft}` : '');
-            window.location.href = urlWithHash;
+            window.location.href = url;
         }
     }
 
     /**
      * Navigate to list page (tags, categories) - replace content only
      */
-    async function navigateToListPage(url, newDoc, scrollData) {
+    async function navigateToListPage(url, newDoc) {
         const newContainer = newDoc.querySelector('#contained-containers');
         const currentContainer = document.querySelector('#contained-containers');
         const container = document.getElementById('container');
 
         if (!newContainer || !currentContainer) {
-            return navigateDefault(url, newDoc, scrollData);
+            return navigateDefault(url, newDoc);
         }
 
         // Reset scroll position to threshold
         if (container) {
-            container.scrollLeft = state.scrollThreshold;
-
+            if (window.innerWidth < 991) {
+                await smoothScrollTo(container, 0, 600, 'top');
+            } else {
+                await smoothScrollTo(container, state.scrollThreshold, 600, 'left');
+            }
         }
 
         // Collapse bean-main to mini state
         collapseBeanMain();
 
+        // Use View Transition API - it will automatically apply CSS animations
         const transition = document.startViewTransition(() => {
-            // Phase 1: Float old content upward
-            currentContainer.style.opacity = '0';
-            currentContainer.style.transform = 'translateY(-50px)';
-            currentContainer.style.transition = 'opacity 0.3s ease, transform 0.4s cubic-bezier(0.68, 0, 0.33, 1)';
-
-            setTimeout(() => {
-                // Replace content
-                currentContainer.innerHTML = newContainer.innerHTML;
-                document.title = newDoc.title;
-
-                // Phase 2: Slide new content from right
-                currentContainer.style.opacity = '0';
-                currentContainer.style.visibility = 'visible';
-                currentContainer.style.transform = 'translateX(100px)';
-                currentContainer.style.transition = 'none';
-
-                requestAnimationFrame(() => {
-                    currentContainer.style.transition = 'opacity 0.4s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                    currentContainer.style.opacity = '1';
-                    currentContainer.style.transform = 'translateX(0)';
-                });
-            }, 300);
+            // Simply replace the content - View Transition API handles everything
+            currentContainer.innerHTML = newContainer.innerHTML;
+            document.title = newDoc.title;
         });
 
         await transition.finished;
@@ -363,8 +292,7 @@
         // Update URL
         const historyState = {
             page: 'list',
-            url: url,
-            scrollPosition: scrollData
+            url: url
         };
         history.pushState(historyState, '', url);
     }
@@ -372,19 +300,34 @@
     /**
      * Navigate to single page (posts, about) - append modal
      */
-    async function navigateToSinglePage(url, newDoc, scrollData) {
+    async function navigateToSinglePage(url, newDoc) {
         const modalContent = newDoc.querySelector('.modal');
 
         if (!modalContent) {
-            return navigateDefault(url, newDoc, scrollData);
+            return navigateDefault(url, newDoc);
+        }
+
+        // Temporarily remove view-transition-name from contained-beans
+        // to prevent it from animating during modal open
+        const containedBeans = document.querySelector('.contained-beans');
+        const originalTransitionName = containedBeans ? containedBeans.style.viewTransitionName : null;
+        if (containedBeans) {
+            containedBeans.style.viewTransitionName = 'none';
         }
 
         // Create modal element
         const modal = modalContent.cloneNode(true);
         modal.classList.add('appended-modal');
         modal.style.opacity = '0';
-        modal.style.transform = 'scale(0.9) translateY(50px)';
-        modal.style.transition = 'opacity 0.4s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        modal.style.transition = 'opacity 0.4s ease';
+
+        // Get bean-read element and set initial state for pop-in animation
+        const beanRead = modal.querySelector('.bean-read');
+        if (beanRead) {
+            beanRead.style.transform = 'scale(0.7) translateY(20vh)';
+            beanRead.style.opacity = '0';
+            beanRead.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease';
+        }
 
         const transition = document.startViewTransition(() => {
             // Append modal to document
@@ -394,19 +337,29 @@
             // Trigger animation
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
+                    // Fade in modal background
                     modal.style.opacity = '1';
-                    modal.style.transform = 'scale(1) translateY(0)';
+
+                    // Pop in bean-read element
+                    if (beanRead) {
+                        beanRead.style.transform = 'scale(1) translateY(0)';
+                        beanRead.style.opacity = '1';
+                    }
                 });
             });
         });
 
         await transition.finished;
 
+        // Restore view-transition-name
+        if (containedBeans) {
+            containedBeans.style.viewTransitionName = originalTransitionName || '';
+        }
+
         // Update URL
         const state = {
             page: 'single',
-            url: url,
-            scrollPosition: scrollData
+            url: url
         };
         history.pushState(state, '', url);
     }
@@ -414,7 +367,7 @@
     /**
      * Default navigation - replace entire body
      */
-    async function navigateDefault(url, newDoc, scrollData) {
+    async function navigateDefault(url, newDoc) {
         const newModal = newDoc.querySelector('.bean-read');
         if (newModal) {
             newModal.classList.add('modal-opening');
@@ -428,11 +381,10 @@
 
         await transition.finished;
 
-        // Update URL with history state containing scroll position
+        // Update URL
         const state = {
             page: 'article',
-            url: url,
-            scrollPosition: scrollData
+            url: url
         };
         history.pushState(state, '', url);
 
@@ -466,12 +418,24 @@
             await new Promise(resolve => setTimeout(resolve, 400));
 
             if (document.startViewTransition) {
+                // Temporarily remove view-transition-name from contained-beans
+                const containedBeans = document.querySelector('.contained-beans');
+                const originalTransitionName = containedBeans ? containedBeans.style.viewTransitionName : null;
+                if (containedBeans) {
+                    containedBeans.style.viewTransitionName = 'none';
+                }
+
                 const transition = document.startViewTransition(() => {
                     // Remove modal from document
                     targetModal.remove();
                 });
 
                 await transition.finished;
+
+                // Restore view-transition-name
+                if (containedBeans) {
+                    containedBeans.style.viewTransitionName = originalTransitionName || '';
+                }
             } else {
                 targetModal.remove();
             }
@@ -480,11 +444,6 @@
             if (history.state && (history.state.page === 'single' || history.state.page === 'article')) {
                 history.back();
             }
-
-            // Restore scroll position
-            setTimeout(() => {
-                restoreScrollPosition();
-            }, 50);
 
             return;
         }
@@ -526,21 +485,8 @@
 
             await transition.finished;
 
-            // Get scroll position from history state if available
-            let scrollData = null;
-            if (history.state && history.state.scrollPosition) {
-                scrollData = history.state.scrollPosition;
-                // Store in sessionStorage for restoration
-                sessionStorage.setItem('scrollPosition', JSON.stringify(scrollData));
-            }
-
             // Update URL
             history.pushState({ page: 'home' }, '', '/');
-
-            // Restore scroll position with delay for smooth pop-in
-            setTimeout(() => {
-                restoreScrollPosition();
-            }, 50);
 
         } catch (error) {
             console.error('Navigation error:', error);
@@ -552,29 +498,7 @@
      * Handle browser back/forward for modal navigation
      */
     function handleModalPopState(event) {
-        // If going back to homepage, restore scroll position from history state
-        if (event.state && event.state.page === 'home') {
-            // Page will reload, scroll position will be restored via sessionStorage
-        } else if (event.state && event.state.scrollPosition) {
-            // Store scroll position for restoration
-            sessionStorage.setItem('scrollPosition', JSON.stringify(event.state.scrollPosition));
-        }
-    }
-
-    /**
-     * Check URL hash for scroll position on page load
-     */
-    function checkHashScrollPosition() {
-        const hash = window.location.hash;
-        if (hash && hash.startsWith('#scroll-')) {
-            const scrollLeft = parseInt(hash.replace('#scroll-', ''), 10);
-            if (!isNaN(scrollLeft)) {
-                const scrollData = { scrollLeft: scrollLeft, scrollTop: 0 };
-                sessionStorage.setItem('scrollPosition', JSON.stringify(scrollData));
-                // Remove hash from URL
-                history.replaceState(null, '', window.location.pathname);
-            }
-        }
+        // Handle popstate events
     }
 
     /**
@@ -586,6 +510,13 @@
             const link = e.target.closest('a.link-item');
             if (link && link.href && !link.target) {
                 const url = new URL(link.href);
+
+                if (url.pathname == window.location.pathname) {
+                    e.preventDefault();
+                    // Need to scroll to the beginning
+                    smoothScrollTo(container, state.scrollThreshold, 600, 'left');
+                    return;
+                }
                 // Only intercept same-origin links
                 if (url.origin === window.location.origin && !link.href.includes('#')) {
                     e.preventDefault();
@@ -613,8 +544,7 @@
             // Check if this is a list page navigation
             if (isListPage(url) || url === window.location.origin + '/' || url === '/') {
                 // Use enhanced list page navigation
-                const scrollData = saveScrollPosition();
-                await navigateToListPage(url, newDoc, scrollData);
+                await navigateToListPage(url, newDoc);
                 return;
             }
 
@@ -669,10 +599,10 @@
                 state.isBeanMini = true;
                 beanMain.classList.add('bean-main-mini');
             }
-
-            // Recalculate scroll threshold
-            state.scrollThreshold = Math.floor(window.innerWidth * 0.45 - 99);
         }
+
+        // Always recalculate scroll threshold on resize
+        state.scrollThreshold = Math.floor(window.innerWidth * 0.45 - 100);
     }
 
     /**
@@ -691,6 +621,49 @@
 
         // For desktop, assume good performance if browser supports backdrop-filter
         return false;
+    }
+
+    /**
+     * Smooth scroll to target position over specified duration
+     * Supports both horizontal (left) and vertical (top) scrolling
+     * Duration is treated as a maximum time limit. Shorter distances will scroll faster.
+     * @param {HTMLElement} element - The element to scroll
+     * @param {number} target - The target scroll position
+     * @param {number} maxDuration - Maximum duration in milliseconds
+     * @param {string} direction - Direction to scroll: 'left' or 'top' (default: 'left')
+     */
+    function smoothScrollTo(element, target, maxDuration, direction = 'left') {
+        const scrollProp = direction === 'top' ? 'scrollTop' : 'scrollLeft';
+        const start = element[scrollProp];
+        const change = target - start;
+
+        // If change is negligible, finish immediately
+        if (Math.abs(change) < 5) {
+            element[scrollProp] = target;
+            return Promise.resolve();
+        }
+
+        const startTime = performance.now();
+        // Calculate duration: 2ms per pixel, capped at maxDuration
+        // This ensures short distances are instant/fast, while long distances are smooth
+        const duration = Math.min(maxDuration, Math.abs(change) * 2);
+
+        return new Promise(resolve => {
+            function animateScroll(currentTime) {
+                const elapsed = currentTime - startTime;
+                if (elapsed < duration) {
+                    const t = elapsed / duration;
+                    // Ease in-out quadratic
+                    const ease = t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+                    element[scrollProp] = start + change * ease;
+                    requestAnimationFrame(animateScroll);
+                } else {
+                    element[scrollProp] = target;
+                    resolve();
+                }
+            }
+            requestAnimationFrame(animateScroll);
+        });
     }
 
 })();
