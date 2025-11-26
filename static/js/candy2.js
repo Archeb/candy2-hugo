@@ -261,13 +261,17 @@
     }
 
     /**
-     * Setup mobile scroll behavior for article banner
-     * In mobile mode, when user scrolls past the article cover (72vw),
-     * the reading time in banner-tools changes to a close button
+     * Setup scroll behavior for article banner
      */
     function setupMobileScrollBehavior() {
         // Only run in mobile mode and if modal exists
-        if (!state.mobileMode) return;
+        if (state.mobileMode) {
+            // Calculate the threshold (height of article-cover which is 72vw in mobile)
+            var coverHeight = window.innerWidth * 0.72;
+        } else {
+            // Calculate the threshold (height of article-cover which is 500px in PC)
+            var coverHeight = 500;
+        }
 
         const beanRead = document.querySelector('.bean-read');
         const articleBanner = document.querySelector('.article-banner');
@@ -275,8 +279,7 @@
 
         if (!beanRead || !articleBanner || !articleCover) return;
 
-        // Calculate the threshold (height of article-cover which is 72vw in mobile)
-        const coverHeight = window.innerWidth * 0.72;
+
 
         // Remove existing scroll listener if any
         if (beanRead._scrollListener) {
