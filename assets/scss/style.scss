@@ -594,7 +594,6 @@ a {
 			margin: -25px 20px 0;
 			position: sticky;
 			padding: 8px 15px 8px 8px;
-			display: flex;
 
 			.banner-content {
 				display: flex;
@@ -1292,7 +1291,7 @@ a {
 
 				.article-title {
 					padding: 15px 20px 35px;
-					font-size: 20px;
+					font-size: 24px;
 				}
 
 				.article-category {
@@ -1301,43 +1300,41 @@ a {
 			}
 
 			.article-banner {
+				padding: 0;
 
-				.banner-tools {
-					.reading-time {
-						display: inline;
-						transition: opacity 0.3s;
+				.banner-content {
+					padding: 5px 12px 5px 5px;
+
+					.banner-tools {
+						.reading-time {
+							display: inline;
+							transition: opacity 0.3s;
+						}
+
+
 					}
-
-
 				}
 
 				/* When scrolled past cover (sticky state) */
 				&.scrolled {
 
-					width: calc(100vw - 130px);
-
-					.banner-tools {
-						.reading-time {
-							display: none;
-						}
-
-
+					.publish-time {
+						display: none;
 					}
+
 
 					.mobile-close-btn {
 						display: flex;
-						position: fixed;
-						top: 0;
-						right: -60px;
-						font-size: 2.6em;
+						margin-left: 10px;
 						cursor: pointer;
 						transition: all .3s;
 						justify-content: center;
-						width: 53px;
+						width: 47px;
 						align-items: center;
-						height: 53px;
+						height: 47px;
 						line-height: 40px;
 						text-align: center;
+						flex-shrink: 0;
 						border-radius: 50%;
 						background-color: rgba(255, 255, 255, .8);
 						backdrop-filter: blur(30px);

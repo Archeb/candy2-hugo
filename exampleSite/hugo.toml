@@ -1,6 +1,6 @@
 baseURL = 'https://example.com/'
 languageCode = 'zh-CN'
-title = 'Candy2'
+title = 'Mozzie'
 theme = 'candy2'
 
 # Note: When using this exampleSite, the theme is located at ../../

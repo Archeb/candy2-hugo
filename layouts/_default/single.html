@@ -18,9 +18,6 @@
         <div class="modal-close">×</div>
         <div class="article-cover" style="background-image: url('{{ if .Params.featuredImage }}{{ .Params.featuredImage }}{{ else }}{{ .Site.Params.defaultImage | default "/img/cover1.jpg" }}{{ end }}');">
             <div class="article-category">
-                <div class="category-item">
-                    <div class="item-text">{{ .Date.Format "2006年1月2日" }}</div>
-                </div>
                 {{ range .Params.categories }}
                 <div class="category-item">
                     <div class="item-text">{{ . }}</div>
