@@ -5,24 +5,7 @@
     <div id="contained-containers" class="contained-containers">
         <div class="contained-beans">
             {{ range (where .Site.RegularPages "Type" "posts").ByDate.Reverse }}
-            <a href="{{ .Permalink }}" class="bean bean-article" style="background-image: url('{{ if .Params.featuredImage }}{{ .Params.featuredImage }}{{ else }}{{ .Site.Params.defaultImage | default "/img/cover1.jpg" }}{{ end }}');">
-                <div class="article-category">
-                    <div class="category-item">
-                        <div class="item-text">{{ .Date.Format "2006年1月2日" }}</div>
-                    </div>
-                    {{ range .Params.tags }}
-                    <div class="category-item">
-                        <div class="item-text">{{ . }}</div>
-                    </div>
-                    {{ end }}
-                </div>
-                <div class="article-title">
-                    <span>{{ .Title }}</span>
-                    <div class="article-summary">
-                    {{ .Description | safeHTML }}
-                    </div>
-                </div>
-            </a>
+            {{ partial "article-card.html" . }}
             {{ end }}
             <div class="bean-space"></div>
         </div>
@@ -38,6 +21,11 @@
                 <div class="category-item">
                     <div class="item-text">{{ .Date.Format "2006年1月2日" }}</div>
                 </div>
+                {{ range .Params.categories }}
+                <div class="category-item">
+                    <div class="item-text">{{ . }}</div>
+                </div>
+                {{ end }}
                 {{ range .Params.tags }}
                 <div class="category-item">
                     <div class="item-text">{{ . }}</div>
@@ -56,7 +44,10 @@
                 <span>{{ .Site.Params.author | default "作者" }}</span>
                 <span class="publish-time">{{ .Date.Format "2006年1月2日" }}</span>
             </div>
-            <div class="banner-tools">阅读共需 {{ .ReadingTime }} 分钟</div>
+            <div class="banner-tools">
+                <span class="reading-time">阅读共需 {{ .ReadingTime }} 分钟</span>
+                <div class="mobile-close-btn">×</div>
+            </div>
         </div>
         <div class="article-content">
             {{ .Content }}

@@ -5,24 +5,7 @@
         <div class="contained-beans">
             {{ $paginator := .Paginate .Pages }}
             {{ range $index, $page := $paginator.Pages }}
-            <a href="{{ .Permalink }}" class="bean bean-article" style="background-image: url('{{ if .Params.featuredImage }}{{ .Params.featuredImage }}{{ else }}{{ .Site.Params.defaultImage | default "/img/cover1.jpg" }}{{ end }}');">
-                <div class="article-category">
-                    <div class="category-item">
-                        <div class="item-text">{{ .Date.Format "2006年1月2日" }}</div>
-                    </div>
-                    {{ range .Params.tags }}
-                    <div class="category-item">
-                        <div class="item-text">{{ . }}</div>
-                    </div>
-                    {{ end }}
-                </div>
-                <div class="article-title">
-                    <span>{{ .Title }}</span>
-                    <div class="article-summary">
-                        {{ .Description | safeHTML }}
-                    </div>
-                </div>
-            </a>
+            {{ partial "article-card.html" . }}
             {{ end }}
             <div class="bean-space"></div>
         </div>

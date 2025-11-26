@@ -57,6 +57,7 @@
         setupViewTransitions();
         setupResponsive();
         setupHorizontalWheel();
+        setupMobileScrollBehavior();
 
         // Initial state
         checkMobileMode();
@@ -123,9 +124,38 @@
      * Setup horizontal wheel scrolling
      * Convert vertical wheel scrolling to horizontal in desktop mode
      */
+    /**
+     * Setup horizontal wheel scrolling
+     * Convert vertical wheel scrolling to horizontal in desktop mode
+     * Implements smooth scrolling with inertia for a "Chrome-like" feel
+     */
     function setupHorizontalWheel() {
         const container = document.getElementById('container');
         if (!container) return;
+
+        // State for smooth scrolling
+        let targetScrollLeft = container.scrollLeft;
+        let isAnimating = false;
+        const lerpFactor = 0.15; // Controls the "weight" or "smoothness" (0.1 = heavy/smooth, 0.3 = snappy)
+
+        // Animation loop
+        function updateScroll() {
+            if (!isAnimating) return;
+
+            const current = container.scrollLeft;
+            const diff = targetScrollLeft - current;
+
+            // Stop if close enough
+            if (Math.abs(diff) < 0.5) {
+                container.scrollLeft = targetScrollLeft;
+                isAnimating = false;
+                return;
+            }
+
+            // Interpolate
+            container.scrollLeft = current + diff * lerpFactor;
+            requestAnimationFrame(updateScroll);
+        }
 
         container.addEventListener('wheel', function (e) {
             if (state.mobileMode) return;
@@ -133,7 +163,32 @@
             // Only convert vertical scrolling to horizontal on desktop
             if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
                 e.preventDefault();
-                container.scrollLeft += e.deltaY;
+
+                // If animation was stopped, sync target to current position
+                if (!isAnimating) {
+                    targetScrollLeft = container.scrollLeft;
+                }
+
+                // Normalize delta
+                let delta = e.deltaY;
+                if (e.deltaMode === 1) { // DOM_DELTA_LINE
+                    delta *= 40; // Estimate line height
+                } else if (e.deltaMode === 2) { // DOM_DELTA_PAGE
+                    delta *= container.clientHeight;
+                }
+
+                // Accumulate delta
+                targetScrollLeft += delta;
+
+                // Clamp target
+                const maxScroll = container.scrollWidth - container.clientWidth;
+                targetScrollLeft = Math.max(0, Math.min(targetScrollLeft, maxScroll));
+
+                // Start animation if not running
+                if (!isAnimating) {
+                    isAnimating = true;
+                    requestAnimationFrame(updateScroll);
+                }
             }
         }, { passive: false });
     }
@@ -156,6 +211,14 @@
         // Close button - navigate back to home
         const closeBtn = e.target.closest('.modal-close');
         if (closeBtn) {
+            e.preventDefault();
+            closeArticleModal();
+            return;
+        }
+
+        // Mobile close button in banner-tools (mobile only)
+        const mobileCloseBtn = e.target.closest('.mobile-close-btn');
+        if (mobileCloseBtn) {
             e.preventDefault();
             closeArticleModal();
             return;
@@ -192,6 +255,48 @@
             window.addEventListener('popstate', handleModalPopState);
             state.eventHandlersSetup = true;
         }
+
+        // Setup mobile scroll behavior for banner
+        setupMobileScrollBehavior();
+    }
+
+    /**
+     * Setup mobile scroll behavior for article banner
+     * In mobile mode, when user scrolls past the article cover (72vw),
+     * the reading time in banner-tools changes to a close button
+     */
+    function setupMobileScrollBehavior() {
+        // Only run in mobile mode and if modal exists
+        if (!state.mobileMode) return;
+
+        const beanRead = document.querySelector('.bean-read');
+        const articleBanner = document.querySelector('.article-banner');
+        const articleCover = document.querySelector('.article-cover');
+
+        if (!beanRead || !articleBanner || !articleCover) return;
+
+        // Calculate the threshold (height of article-cover which is 72vw in mobile)
+        const coverHeight = window.innerWidth * 0.72;
+
+        // Remove existing scroll listener if any
+        if (beanRead._scrollListener) {
+            beanRead.removeEventListener('scroll', beanRead._scrollListener);
+        }
+
+        // Create and store the scroll listener
+        const scrollListener = function () {
+            const scrollTop = beanRead.scrollTop;
+
+            // Toggle 'scrolled' class based on scroll position
+            if (scrollTop > coverHeight - 50) { // 50px offset for smooth transition
+                articleBanner.classList.add('scrolled');
+            } else {
+                articleBanner.classList.remove('scrolled');
+            }
+        };
+
+        beanRead._scrollListener = scrollListener;
+        beanRead.addEventListener('scroll', scrollListener);
     }
 
     /**
@@ -213,10 +318,24 @@
 
     /**
      * Check if URL is a single page (posts, about, etc)
+     * Single pages are those that should be displayed as modals
      */
     function isSinglePage(url) {
         const path = new URL(url, window.location.origin).pathname;
-        return path.includes('/posts/') || path === '/about/' || path === '/about';
+
+        // Root path is not a single page
+        if (path === '/' || path === '') {
+            return false;
+        }
+
+        // List pages are not single pages
+        if (isListPage(url)) {
+            return false;
+        }
+
+        // Everything else is considered a single page
+        // This includes /posts/*, /about/, and any custom single pages
+        return true;
     }
 
     /**
@@ -356,6 +475,9 @@
             containedBeans.style.viewTransitionName = originalTransitionName || '';
         }
 
+        // Setup mobile scroll behavior for the new modal
+        setupMobileScrollBehavior();
+
         // Update URL
         const state = {
             page: 'single',
@@ -387,6 +509,9 @@
             url: url
         };
         history.pushState(state, '', url);
+
+        // Setup mobile scroll behavior for the new page
+        setupMobileScrollBehavior();
 
         // Remove opening animation class after animation completes
         const modal = document.querySelector('.bean-read');
@@ -541,13 +666,18 @@
             const parser = new DOMParser();
             const newDoc = parser.parseFromString(html, 'text/html');
 
-            // Check if this is a list page navigation
+            // Check page type and handle accordingly
             if (isListPage(url) || url === window.location.origin + '/' || url === '/') {
-                // Use enhanced list page navigation
+                // List pages (categories, tags, home): replace content
                 await navigateToListPage(url, newDoc);
+                return;
+            } else if (isSinglePage(url)) {
+                // Single pages (posts, about, etc): open as modal
+                await navigateToSinglePage(url, newDoc);
                 return;
             }
 
+            // Default fallback: replace container content
             const transition = document.startViewTransition(() => {
                 // Replace main content
                 const newContent = newDoc.querySelector('#container');

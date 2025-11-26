@@ -47,7 +47,7 @@ theme = 'candy2'
 
 [[menu.main]]
   name = "关于"
-  url = "/authors/蚊子/"
+  url = "/about/"
   weight = 5
   pre = ""
 

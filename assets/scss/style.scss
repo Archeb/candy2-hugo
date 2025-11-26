@@ -450,63 +450,6 @@ a {
 	transform: scale(0.99);
 }
 
-/* Single Post Modal */
-.modal {
-	background-color: rgba(0, 0, 0, 0);
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 100vw;
-	visibility: visible;
-	overflow-y: hidden;
-	transition: background-color 0.5s, backdrop-filter 0.5s;
-	height: 100%;
-	z-index: 3;
-}
-
-.modal::-webkit-scrollbar {
-	display: none;
-}
-
-.modal-close {
-	display: block;
-	position: fixed;
-	z-index: 4;
-	user-select: none;
-	top: 15px;
-	left: 15px;
-	font-size: 2.5em;
-	text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
-	color: rgba(255, 255, 255, 0.9);
-	cursor: pointer;
-	transition: all 0.3s;
-	width: 45px;
-	height: 45px;
-	line-height: 40px;
-	text-align: center;
-	border-radius: 50%;
-	background-color: rgba(0, 0, 0, 0.2);
-}
-
-.modal-close:hover {
-	background-color: rgba(0, 0, 0, 0.4);
-	transform: scale(1.1);
-	color: white;
-}
-
-.bean-read {
-	background-color: rgba(255, 255, 255, 0.9);
-	margin: 50px auto;
-	width: 800px;
-	overflow-y: scroll;
-	overflow-x: hidden;
-	height: calc(100vh - 100px);
-	transition: all 0.5s;
-	transition-timing-function: cubic-bezier(0.68, 0, 0.33, 1) !important;
-	scrollbar-width: none;
-	box-sizing: border-box;
-	border-radius: 20px;
-}
 
 /* Modal Opening Animation - Scale up and pop in */
 .bean-read.modal-opening {
@@ -696,6 +639,15 @@ a {
 
 			.banner-tools {
 				color: #7e7e7e;
+				position: relative;
+
+				.reading-time {
+					display: inline;
+				}
+
+				.mobile-close-btn {
+					display: none;
+				}
 			}
 
 			.banner-progressbar {
@@ -1306,6 +1258,66 @@ a {
 
 			.article-banner {
 				padding: 8px 15px 8px 8px;
+
+				.banner-tools {
+					.reading-time {
+						display: inline;
+						transition: opacity 0.3s;
+					}
+
+					.mobile-close-btn {
+						display: none;
+						font-size: 2em;
+						line-height: 0.8;
+						cursor: pointer;
+						color: #666666;
+						transition: opacity 0.3s, transform 0.2s;
+						user-select: none;
+						-webkit-user-select: none;
+						-moz-user-select: none;
+
+						&:hover {
+							transform: scale(1.1);
+						}
+
+						&:active {
+							transform: scale(0.9);
+						}
+					}
+				}
+
+				/* When scrolled past cover (sticky state) */
+				&.scrolled {
+
+					width: calc(100vw - 130px);
+
+					.banner-tools {
+						.reading-time {
+							display: none;
+						}
+
+						.mobile-close-btn {
+							display: flex;
+							position: fixed;
+							top: 0;
+							right: -60px;
+							font-size: 2.6em;
+							cursor: pointer;
+							transition: all .3s;
+							justify-content: center;
+							width: 53px;
+							align-items: center;
+							height: 53px;
+							line-height: 40px;
+							text-align: center;
+							border-radius: 50%;
+							background-color: rgba(255, 255, 255, .8);
+							backdrop-filter: blur(30px);
+							color: #363636;
+							box-shadow: 5px 5px 10px rgba(32, 32, 32, .1);
+						}
+					}
+				}
 			}
 
 			.article-content {
