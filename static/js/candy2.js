@@ -12,7 +12,8 @@
         mobileMode: false,
         currentModal: null,
         scrollThreshold: 0,
-        eventHandlersSetup: false
+        eventHandlersSetup: false,
+        activeProgrammaticScrolls: 0
     };
 
     /**
@@ -141,6 +142,12 @@
         // Animation loop
         function updateScroll() {
             if (!isAnimating) return;
+
+            // Avoid conflict with smoothScrollTo
+            if (state.activeProgrammaticScrolls > 0) {
+                isAnimating = false;
+                return;
+            }
 
             const current = container.scrollLeft;
             const diff = targetScrollLeft - current;
@@ -776,6 +783,8 @@
             return Promise.resolve();
         }
 
+        state.activeProgrammaticScrolls++;
+
         const startTime = performance.now();
         // Calculate duration: 2ms per pixel, capped at maxDuration
         // This ensures short distances are instant/fast, while long distances are smooth
@@ -792,6 +801,7 @@
                     requestAnimationFrame(animateScroll);
                 } else {
                     element[scrollProp] = target;
+                    state.activeProgrammaticScrolls--;
                     resolve();
                 }
             }
