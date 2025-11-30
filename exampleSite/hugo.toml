@@ -1,7 +1,7 @@
 baseURL = 'https://example.com/'
 languageCode = 'zh-CN'
 title = '蚊帐'
-theme = 'candy2'
+theme = 'candy2-hugo'
 
 # Note: When using this exampleSite, the theme is located at ../../
 # Hugo will automatically find it when you run from exampleSite directory
