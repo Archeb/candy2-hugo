@@ -1,0 +1,191 @@
+/* Bean Main (Navigation) */
+.bean-main {
+    width: 200px;
+    height: 600px;
+    margin-left: calc(50% - 100px);
+    left: 5%;
+    user-select: none;
+    -moz-user-select: none;
+    will-change: backdrop-filter;
+    -webkit-user-select: none;
+    border-radius: 100px !important;
+    position: sticky;
+    overflow: hidden;
+    transition: all 0.3s;
+    z-index: 10;
+
+
+    .avatar {
+        display: flex;
+        justify-content: center;
+        margin-top: 25px;
+        transition: all 0.3s;
+
+        img {
+            transition: all 0.3s;
+            width: 150px;
+            height: 150px;
+            border: 3px solid rgba(245, 245, 245, 0.2);
+            box-shadow: 0 0 10px rgba(32, 32, 32, 0.1);
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+    }
+
+    .blog-name {
+        margin-top: 10px;
+        text-align: center;
+        font-size: 30px;
+        height: 44px;
+        overflow: hidden;
+        transition: all 0.3s;
+        text-shadow: 1px 1px rgba(32, 32, 32, 0.1);
+
+        .small {
+            font-size: 75%;
+        }
+    }
+
+    .links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 10px 0;
+        padding: 0 10px;
+
+        .link-item {
+            cursor: pointer;
+            color: inherit;
+            border-radius: 100px;
+            margin: 7px 0;
+            padding: 7px 0;
+            width: 100%;
+            text-align: center;
+            font-size: 18px;
+            font-family: "iconfont";
+            transition: all 0.3s;
+
+            .link-container {
+                transition: all 0.3s;
+            }
+
+            .link-text {
+                overflow: hidden;
+                transition: all 0.3s;
+            }
+
+            .link-icon svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            &:hover {
+                background-color: rgba(254, 254, 254, 0.3);
+                transform: translate(0, -2px);
+                box-shadow: 0 0 5px rgba(32, 32, 32, 0.1);
+            }
+
+            &:active {
+                .link-container {
+                    transform: scale(0.9);
+                }
+            }
+        }
+
+        .link-item-selected {
+            background-color: transparent;
+            box-shadow: none;
+        }
+    }
+
+    .meta-info {
+        font-size: 10px;
+        margin-top: 20px;
+        padding: 0 20px;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.7);
+
+        a {
+            border-bottom: 1px solid #8172ef;
+        }
+
+        .show {
+            display: block;
+            transition: all 0.3s;
+            opacity: 1;
+        }
+
+        .hide {
+            display: block;
+            opacity: 0;
+            transition: all 0.3s;
+            transform: translate(0, -34px);
+        }
+
+        &:hover {
+            .hide {
+                opacity: 1;
+            }
+
+            .show {
+                opacity: 0;
+            }
+        }
+    }
+}
+
+/* Bean Main Mini State */
+.bean-main-mini {
+    width: 70px;
+    height: 330px;
+
+    .avatar {
+        margin-top: 10px;
+
+        img {
+            width: 50px;
+            height: 50px;
+        }
+    }
+
+    .blog-name {
+        height: 0px;
+        opacity: 0;
+        font-size: 0px;
+        margin-top: 0px;
+    }
+
+    .link-text {
+        display: none;
+    }
+
+    .meta-info {
+        display: none;
+    }
+
+    .links {
+        margin: 7px 0;
+
+        .link-item {
+            &:hover {
+                transform: translate(0);
+                background-color: transparent;
+                transform: translate(0, 0);
+                box-shadow: 0 0 0px rgba(32, 32, 32, 0.1);
+            }
+
+            &:active {
+                transform: scale(0.9);
+
+                .link-container {
+                    transform: scale(0.8);
+                }
+            }
+        }
+
+        .link-item-selected {
+            background-color: rgba(254, 254, 254, 0.3) !important;
+            box-shadow: 0 0 5px rgba(32, 32, 32, 0.1) !important;
+        }
+    }
+}
