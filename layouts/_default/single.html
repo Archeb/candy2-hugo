@@ -5,62 +5,100 @@
     <div id="contained-containers" class="contained-containers">
         <div class="contained-beans">
             {{ range (where .Site.RegularPages "Type" "posts").ByDate.Reverse }}
-            {{ partial "article-card.html" . }}
-            {{ end }}
-            <div class="bean-space"></div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal overlay for the single post -->
-<div class="modal" style="visibility: visible; background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(20px);">
-    <div class="bean bean-read" style="transform: translate(0, 0);">
-        <div class="modal-close">×</div>
-        <div class="article-cover" style="background-image: url('{{ if .Params.featuredImage }}{{ .Params.featuredImage }}{{ else }}{{ .Site.Params.defaultImage | default "/img/cover1.jpg" }}{{ end }}');">
-            <div class="article-category">
-                {{ range .Params.categories }}
-                <div class="category-item">
-                    <div class="item-text">{{ . }}</div>
+                        {{ partial "article-card.html" . }}
+                        {{ end }}
+                        <div class="bean-space"></div>
+                    </div>
                 </div>
-                {{ end }}
-                {{ range .Params.tags }}
-                <div class="category-item">
-                    <div class="item-text">{{ . }}</div>
-                </div>
-                {{ end }}
             </div>
-            <div class="article-title">{{ .Title }}</div>
-        </div>
-        <div class="article-banner">
-            <div class="banner-content">
-                <div class="banner-author">
-                    {{ if .Site.Params.authorImage }}
-                    <div class="author-avatar">
-                        <img src="{{ .Site.Params.authorImage }}" alt="{{ .Site.Params.author }}">
+
+            <!-- Modal overlay for the single post -->
+            <div class="modal"
+                style="visibility: visible; background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(20px);">
+                <div class="article-toc">
+                    {{ .TableOfContents }}
+                </div>
+
+                <div class="bean bean-read" style="transform: translate(0, 0);">
+                    <div class="modal-close">×</div>
+                    <div class="article-cover"
+                        style="background-image: url('{{ if .Params.featuredImage }}{{ .Params.featuredImage }}{{ else }}{{ .Site.Params.defaultImage | default "/img/cover1.jpg" }}{{ end }}');">
+                        <div class="article-category">
+                            {{ range .Params.categories }}
+                            <div class="category-item">
+                                <div class="item-text">{{ . }}</div>
+                            </div>
+                            {{ end }}
+                            {{ range .Params.tags }}
+                            <div class="category-item">
+                                <div class="item-text">{{ . }}</div>
+                            </div>
+                            {{ end }}
+                        </div>
+                        <div class="article-title">{{ .Title }}</div>
+                    </div>
+                    <div class="article-banner">
+                        <div class="banner-content">
+                            <div class="banner-author">
+                                {{ if .Site.Params.authorImage }}
+                                <div class="author-avatar">
+                                    <img src="{{ .Site.Params.authorImage }}" alt="{{ .Site.Params.author }}">
+                                </div>
+                                {{ end }}
+                                <span>{{ .Site.Params.author | default "作者" }}</span>
+                                <span class="publish-time">{{ .Date.Format "2006年1月2日" }}</span>
+                            </div>
+                            <div class="banner-tools">
+                                <span class="reading-time">阅读共需 {{ .ReadingTime }} 分钟</span>
+                            </div>
+                        </div>
+                        <div class="mobile-close-btn"><svg xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32">
+                                <path
+                                    d="M24 9.4L22.6 8L16 14.6L9.4 8L8 9.4l6.6 6.6L8 22.6L9.4 24l6.6-6.6l6.6 6.6l1.4-1.4l-6.6-6.6L24 9.4z"
+                                    fill="currentColor"></path>
+                            </svg></div>
+                    </div>
+                    <div class="article-content">
+                        {{ .Content }}
+                    </div>
+                    {{ if .Params.tags }}
+                    <div class="article-tags">
+                        <span class="tags-label">Tags:</span>
+                        <ul class="tags-list">
+                            {{ range .Params.tags }}
+                            <li><a href="/tags/{{ . | urlize }}/">{{ . }}</a></li>
+                            {{ end }}
+                        </ul>
                     </div>
                     {{ end }}
-                    <span>{{ .Site.Params.author | default "作者" }}</span>
-                    <span class="publish-time">{{ .Date.Format "2006年1月2日" }}</span>
                 </div>
-                <div class="banner-tools">
-                    <span class="reading-time">阅读共需 {{ .ReadingTime }} 分钟</span>
+
+                <div class="bean-tools">
+                    <div class="tool-btn" id="btn-top" title="回到顶部"
+                        onclick="document.querySelector('.bean-read').scrollTo({top: 0, behavior: 'smooth'})">
+                        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+                            <path
+                                d="M519.4 242.8l263.8 333.4c14.6 18.4 1.4 45.8-22.2 45.8H263c-23.6 0-36.8-27.4-22.2-45.8l263.8-333.4c10.4-13.2 30.4-13.2 40.8 0z"
+                                fill="currentColor" />
+                        </svg>
+                    </div>
+                    <div class="tool-btn" id="btn-comment" title="查看评论"
+                        onclick="document.querySelector('.article-comment').scrollIntoView({behavior: 'smooth'})">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+                            <path
+                                d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H6L4 18V4H20V16Z"
+                                fill="currentColor" />
+                        </svg>
+                    </div>
+                    <div class="tool-btn" id="btn-share" title="分享"
+                        onclick="navigator.share({title: document.title, url: window.location.href})">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+                            <path
+                                d="M18 16.08C17.24 16.08 16.56 16.38 16.04 16.85L8.91 12.7C8.96 12.47 9 12.24 9 12C9 11.76 8.96 11.53 8.91 11.3L15.96 7.19C16.5 7.69 17.21 8 18 8C19.66 8 21 6.66 21 5C21 3.34 19.66 2 18 2C16.34 2 15 3.34 15 5C15 5.24 15.04 5.47 15.09 5.7L8.04 9.81C7.5 9.31 6.79 9 6 9C4.34 9 3 10.34 3 12C3 13.66 4.34 15 6 15C6.79 15 7.5 14.69 8.04 14.19L15.16 18.34C15.11 18.55 15.08 18.77 15.08 19C15.08 20.61 16.39 21.92 18 21.92C19.61 21.92 20.92 20.61 20.92 19C20.92 17.39 19.61 16.08 18 16.08Z"
+                                fill="currentColor" />
+                        </svg>
+                    </div>
                 </div>
             </div>
-            <div class="mobile-close-btn"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32"><path d="M24 9.4L22.6 8L16 14.6L9.4 8L8 9.4l6.6 6.6L8 22.6L9.4 24l6.6-6.6l6.6 6.6l1.4-1.4l-6.6-6.6L24 9.4z" fill="currentColor"></path></svg></div>
-        </div>
-        <div class="article-content">
-            {{ .Content }}
-        </div>
-        {{ if .Params.tags }}
-        <div class="article-tags">
-            <span class="tags-label">Tags:</span>
-            <ul class="tags-list">
-                {{ range .Params.tags }}
-                <li><a href="/tags/{{ . | urlize }}/">{{ . }}</a></li>
-                {{ end }}
-            </ul>
-        </div>
-        {{ end }}
-    </div>
-</div>
-{{ end }}
+            {{ end }}

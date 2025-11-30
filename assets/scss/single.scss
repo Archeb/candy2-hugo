@@ -350,3 +350,131 @@
         transform: scale(0.7);
     }
 }
+
+/* Bean TOC */
+.article-toc {
+    position: fixed;
+    left: calc(50% - 650px);
+    top: 100px;
+    width: 200px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    z-index: 10;
+    transition: all 0.3s;
+    scrollbar-width: none;
+    color: #ffffff;
+
+    &::-webkit-scrollbar {
+        display: none;
+        /* Chrome/Safari */
+    }
+
+
+    nav#TableOfContents {
+
+        text-align: right;
+
+
+        ul:first-child {
+            &::before {
+                content: "目录";
+                font-size: 24px;
+                font-weight: bold;
+                color: #dddddd;
+                text-align: right;
+                padding-bottom: 10px;
+            }
+
+            li:first-child {
+                margin-top: 20px;
+            }
+        }
+
+        ul {
+
+            list-style: none;
+            padding: 0;
+
+
+            li {
+                margin-bottom: 8px;
+
+                a {
+                    color: #bbbbbb;
+                    text-decoration: none;
+                    font-size: 16px;
+                    transition: all 0.2s;
+                    display: block;
+                    padding: 2px 0;
+                    line-height: 1.4;
+
+                    &:hover {
+                        color: #ffffff;
+                        transform: translateX(-2px);
+                    }
+                }
+
+                ul {
+                    margin-top: -10px;
+                }
+            }
+        }
+    }
+}
+
+/* Bean Tools (Floating Buttons) */
+.bean-tools {
+    position: fixed;
+    left: calc(50% + 440px);
+    bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 10;
+
+    .tool-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        color: #555;
+
+        svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+            transition: transform 0.3s;
+        }
+
+        &:hover {
+            transform: scale(1.15);
+            color: #000;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+            svg {
+                transform: scale(1.1);
+            }
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+}
+
+/* Hide on smaller screens */
+@media (max-width: 1350px) {
+
+    .bean-toc,
+    .bean-tools {
+        display: none !important;
+    }
+}
