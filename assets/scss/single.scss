@@ -421,89 +421,117 @@
                     text-decoration: none;
                     font-size: 16px;
                     transition: all 0.2s;
+                    display: block;
+                    padding: 2px 0;
+                    line-height: 1.4;
 
-                    .tool-btn {
-                        width: 50px;
-                        height: 50px;
-                        border-radius: 50%;
-                        background-color: rgba(255, 255, 255, 0.8);
-                        backdrop-filter: blur(20px);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        cursor: pointer;
-                        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-                        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                        color: #555;
-                        opacity: 0;
-                        animation: slideInRight 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-
-                        &:nth-child(1) {
-                            animation-delay: 0.1s;
-                        }
-
-                        &:nth-child(2) {
-                            animation-delay: 0.2s;
-                        }
-
-                        &:nth-child(3) {
-                            animation-delay: 0.3s;
-                        }
-
-
-                        svg {
-                            width: 22px;
-                            height: 22px;
-                            fill: currentColor;
-                            transition: transform 0.3s;
-                        }
-
-                        &:hover {
-                            transform: scale(1.15);
-                            color: #000;
-                            background-color: rgba(255, 255, 255, 0.95);
-                            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-
-                            svg {
-                                transform: scale(1.1);
-                            }
-                        }
-
-                        &:active {
-                            transform: scale(0.95);
-                        }
+                    &:hover {
+                        color: #ffffff;
+                        transform: translateX(-2px);
                     }
                 }
 
-                /* Hide on smaller screens */
-                @media (max-width: 1350px) {
-
-                    .article-toc,
-                    .bean-tools {
-                        display: none !important;
-                    }
+                ul {
+                    margin-top: -10px;
                 }
+            }
+        }
+    }
+}
 
-                @keyframes slideInLeft {
-                    from {
-                        opacity: 0;
-                        transform: translateX(-50px);
-                    }
+/* Bean Tools (Floating Buttons) */
+.bean-tools {
+    position: fixed;
+    left: calc(50% + 440px);
+    bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 10;
 
-                    to {
-                        opacity: 1;
-                        transform: translateX(0);
-                    }
-                }
 
-                @keyframes slideInRight {
-                    from {
-                        opacity: 0;
-                        transform: translateX(50px);
-                    }
+    .tool-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        color: #555;
+        opacity: 0;
+        animation: slideInRight 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 
-                    to {
-                        opacity: 1;
-                        transform: translateX(0);
-                    }
-                }
+        &:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        &:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        &:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+
+        svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+            transition: transform 0.3s;
+        }
+
+        &:hover {
+            transform: scale(1.15);
+            color: #000;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+            svg {
+                transform: scale(1.1);
+            }
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+}
+
+/* Hide on smaller screens */
+@media (max-width: 1350px) {
+
+    .article-toc,
+    .bean-tools {
+        display: none !important;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
