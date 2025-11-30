@@ -1,16 +1,5 @@
 /* Candy2 Hugo Theme Styles - Converted from Vue.js components */
 
-/* Font Face */
-@font-face {
-	font-family: "iconfont";
-	src: url("//at.alicdn.com/t/font_2102450_3a3j75o7rrp.eot");
-	src: url("//at.alicdn.com/t/font_2102450_3a3j75o7rrp.eot?#iefix") format("embedded-opentype"),
-		url("//at.alicdn.com/t/font_2102450_3a3j75o7rrp.woff2") format("woff2"),
-		url("//at.alicdn.com/t/font_2102450_3a3j75o7rrp.woff") format("woff"),
-		url("//at.alicdn.com/t/font_2102450_3a3j75o7rrp.ttf") format("truetype"),
-		url("//at.alicdn.com/t/font_2102450_3a3j75o7rrp.svg#iconfont") format("svg");
-}
-
 /* Global Styles */
 html {
 	height: 100%;
@@ -19,8 +8,8 @@ html {
 
 body {
 	margin: 0;
-	--mybg: url(/img/bg_pc.png);
-	font-family: "ff-tisa-web-pro-1", "ff-tisa-web-pro-2", "Lucida Grande", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+	--mybg: url("/img/clay-banks-u27Rrbs9Dwc-unsplash.jpg");
+	font-family: Lora, "Noto Serif SC", serif;
 	background-image: var(--mybg);
 	background-size: cover;
 	background-position: center;

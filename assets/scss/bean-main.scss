@@ -62,11 +62,15 @@
             width: 100%;
             text-align: center;
             font-size: 18px;
-            font-family: "iconfont";
+            font-family: "iconfont", Lora, "Noto Serif SC", serif;
+            font-weight: 500;
             transition: all 0.3s;
 
             .link-container {
                 transition: all 0.3s;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
 
             .link-text {
@@ -74,9 +78,13 @@
                 transition: all 0.3s;
             }
 
-            .link-icon svg {
-                width: 20px;
-                height: 20px;
+            .link-icon {
+                display: flex;
+
+                svg {
+                    width: 20px;
+                    height: 20px;
+                }
             }
 
             &:hover {
