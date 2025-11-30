@@ -59,12 +59,129 @@
         setupResponsive();
         setupHorizontalWheel();
         setupMobileScrollBehavior();
+        setupTocHighlight();
+        setupProgressBar();
 
         // Initial state
         checkMobileMode();
 
         // Update navigation state on initial load
         updateNavigationState(window.location.href);
+    }
+
+    /**
+     * Setup Table of Contents highlighting based on scroll position
+     * Highlights the TOC link corresponding to the currently visible section
+     */
+    function setupTocHighlight() {
+        const beanRead = document.querySelector('.bean-read');
+        const articleToc = document.querySelector('.article-toc');
+        
+        if (!beanRead || !articleToc) return;
+
+        // Get all TOC links
+        const tocLinks = articleToc.querySelectorAll('a[href^="#"]');
+        if (tocLinks.length === 0) return;
+
+        // Get all heading elements that have IDs
+        const headings = [];
+        tocLinks.forEach(link => {
+            const id = link.getAttribute('href').substring(1);
+            const heading = document.getElementById(id);
+            if (heading) {
+                headings.push({
+                    id: id,
+                    element: heading,
+                    link: link
+                });
+            }
+        });
+
+        if (headings.length === 0) return;
+
+        // Scroll handler to update active TOC item
+        function updateActiveToc() {
+            const scrollTop = beanRead.scrollTop;
+            const scrollHeight = beanRead.scrollHeight;
+            const clientHeight = beanRead.clientHeight;
+
+            // If we're at the bottom, highlight the last item
+            if (scrollTop + clientHeight >= scrollHeight - 10) {
+                tocLinks.forEach(link => link.classList.remove('active'));
+                headings[headings.length - 1].link.classList.add('active');
+                return;
+            }
+
+            // Find the current active section
+            // A section is considered active if it's in the top 30% of the viewport
+            const threshold = scrollTop + clientHeight * 0.3;
+            
+            let activeHeading = null;
+            for (let i = headings.length - 1; i >= 0; i--) {
+                const heading = headings[i];
+                const headingTop = heading.element.offsetTop;
+                
+                if (headingTop <= threshold) {
+                    activeHeading = heading;
+                    break;
+                }
+            }
+
+            // Update active class
+            tocLinks.forEach(link => link.classList.remove('active'));
+            if (activeHeading) {
+                activeHeading.link.classList.add('active');
+            }
+        }
+
+        // Add scroll listener
+        beanRead.addEventListener('scroll', updateActiveToc);
+
+        // Initial update
+        updateActiveToc();
+
+        // Add click handlers for smooth scrolling
+        tocLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const id = this.getAttribute('href').substring(1);
+                const target = document.getElementById(id);
+                if (target) {
+                    const targetTop = target.offsetTop - 100; // Offset for banner
+                    smoothScrollTo(beanRead, targetTop, 600, 'top');
+                }
+            });
+        });
+    }
+
+    /**
+     * Setup progress bar based on scroll position
+     * Updates the width of #banner-progressbar based on reading progress
+     */
+    function setupProgressBar() {
+        const beanRead = document.querySelector('.bean-read');
+        const progressBar = document.getElementById('banner-progressbar');
+        
+        if (!beanRead || !progressBar) return;
+
+        function updateProgressBar() {
+            const scrollTop = beanRead.scrollTop;
+            const scrollHeight = beanRead.scrollHeight;
+            const clientHeight = beanRead.clientHeight;
+            
+            // Calculate scroll percentage
+            const scrollableHeight = scrollHeight - clientHeight;
+            const scrollPercentage = scrollableHeight > 0 ? (scrollTop / scrollableHeight) * 100 : 0;
+            
+            // Update progress bar width
+            progressBar.style.width = `${Math.min(100, Math.max(0, scrollPercentage))}%`;
+        }
+
+        // Add scroll listener
+        beanRead.addEventListener('scroll', updateProgressBar);
+
+        // Initial update
+        updateProgressBar();
     }
 
     /**
@@ -487,6 +604,8 @@
 
         // Setup mobile scroll behavior for the new modal
         setupMobileScrollBehavior();
+        setupTocHighlight();
+        setupProgressBar();
 
         // Update URL
         const state = {
@@ -522,6 +641,8 @@
 
         // Setup mobile scroll behavior for the new page
         setupMobileScrollBehavior();
+        setupTocHighlight();
+        setupProgressBar();
 
         // Remove opening animation class after animation completes
         const modal = document.querySelector('.bean-read');

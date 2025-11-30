@@ -1,6 +1,6 @@
 baseURL = 'https://example.com/'
 languageCode = 'zh-CN'
-title = 'Mozzie'
+title = '蚊帐'
 theme = 'candy2'
 
 # Note: When using this exampleSite, the theme is located at ../../
@@ -9,14 +9,14 @@ theme = 'candy2'
   cleanDestinationDir = true
 
 [pagination]
-  pagerSize = 10
+  pagerSize = 100
 
 [params]
   author = "mozzie"
   description = "A beautiful Hugo blog theme"
   avatar = "/img/icon-circle.png"
   defaultImage = "/img/cover1.jpg"
-  copyright = "© 2024"
+  copyright = "Mozzie © 2025"
   authorImage = "/img/icon-circle.png"
 
 [markup]

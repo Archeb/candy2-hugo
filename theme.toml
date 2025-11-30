@@ -4,10 +4,10 @@
 name = "Candy2"
 license = "GPL-3.0"
 licenselink = "https://github.com/Archeb/candy2-hugo/blob/main/LICENSE"
-description = "A beautiful Hugo theme with glassmorphism effects and horizontal scrolling design, converted from the original Candy2 Vue.js theme"
+description = "A beautiful Hugo theme with glass-ish effects and horizontal scrolling design."
 homepage = "https://github.com/Archeb/candy2-hugo"
-tags = ["blog", "responsive", "modern", "minimalist", "glassmorphism", "animation"]
-features = ["responsive", "blog", "horizontal-scrolling", "glassmorphism", "view-transitions", "modal-posts"]
+tags = ["blog", "responsive", "modern","glass-ish", "animation"]
+features = ["responsive", "blog", "horizontal-scrolling", "glass-ish", "view-transitions", "modal-posts"]
 min_version = "0.152.2"
 
 [author]
