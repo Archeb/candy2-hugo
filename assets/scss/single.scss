@@ -33,6 +33,14 @@
         margin: 50px;
         padding: 20px;
     }
+    .bean-comment{
+        margin: 50px auto 50px 20px;
+        width: 400px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: 500px;
+        transition: all 0.5s;
+    }
 
     .bean-read {
         background-color: #f6f6f6;
@@ -209,8 +217,6 @@
     }
 
     @import "./article-content";
-
-    @import "./article-comment";
 }
 
 @media (max-width: 991px) {

@@ -8,6 +8,7 @@
     <title>{{ if not .IsHome }}{{ .Title }} - {{ end }}{{ .Site.Title }}</title>
     <meta name="description"
         content="{{ if .Description }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+    
     {{ if .Site.Params.author }}
     <meta name="author" content="{{ .Site.Params.author }}">{{ end }}
     {{ $style := resources.Get "scss/style.scss" }}
@@ -16,7 +17,10 @@
     {{ $style = $style | resources.Fingerprint }}
     {{ end }}
     <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+    <link rel="icon" type="image/x-icon" href="{{ .Site.Params.icon }}">
     <meta name="view-transition" content="same-origin">
+    
+    {{ partial "head/opengraph.html" . }}
     {{ block "head" . }}{{ end }}
 </head>
 

@@ -27,6 +27,9 @@
         transition: all 0.3s;
         white-space: nowrap;
         background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9));
+        span{
+            font-weight: 600;
+        }
 
         .article-summary {
             text-overflow: ellipsis;

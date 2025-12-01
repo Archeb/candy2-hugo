@@ -563,14 +563,13 @@
 
         // Create modal element
         const modal = modalContent.cloneNode(true);
-        modal.classList.add('appended-modal');
         modal.style.opacity = '0';
         modal.style.transition = 'opacity 0.4s ease';
 
         // Get bean-read element and set initial state for pop-in animation
         const beanRead = modal.querySelector('.bean-read');
         if (beanRead) {
-            beanRead.style.transform = 'scale(0.7) translateY(20vh)';
+            beanRead.style.transform = 'scale(0.9)';
             beanRead.style.opacity = '0';
             beanRead.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease';
         }
@@ -588,7 +587,7 @@
 
                     // Pop in bean-read element
                     if (beanRead) {
-                        beanRead.style.transform = 'scale(1) translateY(0)';
+                        beanRead.style.transform = 'scale(1)';
                         beanRead.style.opacity = '1';
                     }
                 });
@@ -658,43 +657,24 @@
      * Close article modal with slide-up fade-out animation
      */
     async function closeArticleModal() {
-        const modal = document.querySelector('.modal');
-        const appendedModal = document.querySelector('.modal.appended-modal');
+        debugger;
+        const targetModal = document.querySelector('.modal');
+
+        // Add closing animation
+        targetModal.style.transition = 'opacity 0.4s ease';
+        targetModal.style.opacity = '0';
+
+        var beanRead = targetModal.querySelector('.bean-read');
+
+        if (beanRead) beanRead.classList.add('modal-closing');
+
+        // Wait for animation to complete
+        await new Promise(resolve => setTimeout(resolve, 400));
+
+        targetModal.remove();
 
         // Check if this is an appended modal (single page mode)
-        if (appendedModal || (history.state && history.state.page === 'single' && modal)) {
-            const targetModal = appendedModal || modal;
-
-            // Add closing animation
-            targetModal.style.opacity = '0';
-            targetModal.style.transform = 'scale(0.95) translateY(30px)';
-            targetModal.style.transition = 'opacity 0.3s ease, transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
-
-            // Wait for animation to complete
-            await new Promise(resolve => setTimeout(resolve, 400));
-
-            if (document.startViewTransition) {
-                // Temporarily remove view-transition-name from contained-beans
-                const containedBeans = document.querySelector('.contained-beans');
-                const originalTransitionName = containedBeans ? containedBeans.style.viewTransitionName : null;
-                if (containedBeans) {
-                    containedBeans.style.viewTransitionName = 'none';
-                }
-
-                const transition = document.startViewTransition(() => {
-                    // Remove modal from document
-                    targetModal.remove();
-                });
-
-                await transition.finished;
-
-                // Restore view-transition-name
-                if (containedBeans) {
-                    containedBeans.style.viewTransitionName = originalTransitionName || '';
-                }
-            } else {
-                targetModal.remove();
-            }
+        if (history.state && history.state.page === 'single') {
 
             // Go back in history if applicable
             if (history.state && (history.state.page === 'single' || history.state.page === 'article')) {
@@ -703,51 +683,9 @@
 
             return;
         }
-
-        // For list pages, just go back
-        if (history.state && history.state.page === 'list') {
-            history.back();
-            return;
-        }
-
+        debugger;
         // For default modal pages (bean-read), use original logic
-        const beanRead = document.querySelector('.bean-read');
-        if (beanRead) {
-            beanRead.classList.add('modal-closing');
-            await new Promise(resolve => setTimeout(resolve, 400));
-        }
-
-        if (!document.startViewTransition) {
-            window.history.back();
-            return;
-        }
-
-        try {
-            const response = await fetch('/');
-            const html = await response.text();
-            const parser = new DOMParser();
-            const newDoc = parser.parseFromString(html, 'text/html');
-
-            const transition = document.startViewTransition(() => {
-                // Replace entire body content
-                document.body.innerHTML = newDoc.body.innerHTML;
-                document.title = newDoc.title;
-
-                // Re-initialize homepage-specific functionality
-                setupBeanMainScroll();
-                setupViewTransitions();
-                setupHorizontalWheel();
-            });
-
-            await transition.finished;
-
-            // Update URL
-            history.pushState({ page: 'home' }, '', '/');
-
-        } catch (error) {
-            console.error('Navigation error:', error);
-            window.history.back();
-        }
+        history.pushState({ page: 'home' }, '', '/');
     }
 
     /**

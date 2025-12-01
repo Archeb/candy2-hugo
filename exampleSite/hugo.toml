@@ -14,10 +14,11 @@ theme = 'candy2-hugo'
 [params]
   author = "mozzie"
   description = "A beautiful Hugo blog theme"
-  avatar = "/img/icon-circle.png"
+  avatar = "/img/icon.png"
+  icon = "/img/icon.png"
   defaultImage = "/img/cover1.jpg"
   copyright = "Mozzie © 2025"
-  authorImage = "/img/icon-circle.png"
+  authorImage = "/img/icon.png"
 
 [markup]
   [markup.highlight]

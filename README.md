@@ -50,36 +50,38 @@ hugo version
 
    Update `hugo.toml` (or `config.toml`):
    ```toml
-   baseURL = 'https://example.com/'
-   languageCode = 'zh-CN'
-   title = 'My Candy2 Blog'
-   theme = 'candy2'
+  baseURL = 'https://example.com/'
+  languageCode = 'zh-CN'
+  title = 'Your Blog Name'
+  theme = 'candy2-hugo'
 
-   [params]
-     author = "Your Name"
-     description = "Your site description"
-     avatar = "/img/icon-circle.png"
-     defaultImage = "/img/cover1.jpg"
-     copyright = "© 2025"
+  [pagination]
+    pagerSize = 100
 
-   [[menu.main]]
-     name = "文章"
-     url = "/"
-     weight = 1
+  [params]
+    author = "Your Name"
+    description = "A beautiful Hugo blog theme"
+    avatar = "/img/icon.png"
+    icon = "/img/icon.png"
+    defaultImage = "/img/cover1.jpg"
+    copyright = "Your Name © 2025"
+    authorImage = "/img/icon.png"
 
-   [[menu.main]]
-     name = "技术"
-     url = "/tags/tech/"
-     weight = 2
-     pre = ""
+  [markup]
+    [markup.highlight]
+      style = 'monokai'
+      lineNos = false
+    [markup.goldmark]
+      [markup.goldmark.renderer]
+        unsafe = true
 
-   [[menu.main]]
-     name = "关于"
-     url = "/about/"
-     weight = 3
+  [[menu.main]]
+    name = "关于"
+    url = "/about/"
+    weight = 5
+    pre = 'SVG ICON HTML'
 
-   [markup.goldmark.renderer]
-     unsafe = true
+
    ```
 
 4. **Start the development server**:
