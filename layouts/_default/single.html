@@ -23,31 +23,36 @@
                     <div class="modal-close">×</div>
                     <div class="article-cover"
                         style="background-image: url('{{ if .Params.featuredImage }}{{ .Params.featuredImage }}{{ else }}{{ .Site.Params.defaultImage | default "/img/cover1.jpg" }}{{ end }}');">
-                        <div class="article-category">
-                            {{ range .Params.categories }}
-                            <div class="category-item">
-                                <div class="item-text">{{ . }}</div>
+                        <div></div>
+                        <div class="article-title">
+                            {{ .Title }}
+                            <div class="article-category">
+                                {{ range .Params.categories }}
+                                <div class="category-item">
+                                    <div class="item-text">{{ . }}</div>
+                                </div>
+                                {{ end }}
+                                {{ range .Params.tags }}
+                                <div class="category-item">
+                                    <div class="item-text">{{ . }}</div>
+                                </div>
+                                {{ end }}
                             </div>
-                            {{ end }}
-                            {{ range .Params.tags }}
-                            <div class="category-item">
-                                <div class="item-text">{{ . }}</div>
-                            </div>
-                            {{ end }}
                         </div>
-                        <div class="article-title">{{ .Title }}</div>
                     </div>
                     <div class="article-banner">
                         <div id="banner-progressbar"></div>
                         <div class="banner-content">
+                            
                             <div class="banner-author">
                                 {{ if .Site.Params.authorImage }}
                                 <div class="author-avatar">
                                     <img src="{{ .Site.Params.authorImage }}" alt="{{ .Site.Params.author }}">
                                 </div>
                                 {{ end }}
-                                <span>{{ .Site.Params.author | default "作者" }}</span>
+                                <span class="author-name">{{ .Site.Params.author | default "作者" }}</span>
                                 <span class="publish-time">{{ .Date.Format "2006年1月2日" }}</span>
+                                <span class="small-title">{{ .Title }}</span>
                             </div>
                             <div class="banner-tools">
                                 <span class="reading-time">阅读共需 {{ .ReadingTime }} 分钟</span>

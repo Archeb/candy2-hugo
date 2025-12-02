@@ -4,12 +4,16 @@
 html {
 	height: 100%;
 	position: absolute;
+	--font-serif: Lora, "Noto Serif SC", serif;
+    --font-sans-serif: "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+    --font-mono: "Cascadia Mono", Consolas, Monaco, monospace;
 }
 
 body {
 	margin: 0;
 	--mybg: url("/img/bg-pc.jpg");
-	font-family: Lora, "Noto Serif SC", serif;
+
+	font-family: var(--font-serif);
 	background-image: var(--mybg);
 	background-size: cover;
 	background-position: center;
@@ -177,6 +181,18 @@ a {
 
 		.banner-content {
 			border-radius: 0px !important;
+		}
+	}
+	
+	.modal .bean-read .article-banner.scrolled{
+		.publish-time,.author-name{
+			display:none;
+		}
+		.small-title{
+			display: block;
+		}
+		#banner-progressbar {
+			display: block;
 		}
 	}
 }

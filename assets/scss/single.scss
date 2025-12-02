@@ -183,7 +183,7 @@
 
         .article-title {
             color: #f0f0f0;
-            padding: 25px 30px 40px;
+            padding: 25px 30px 25px;
             text-shadow: 0 0 5px rgba(35, 35, 35, 0.5), 0 0 5px rgba(35, 35, 35, 0.5);
             font-size: 32px;
             background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.6));
@@ -207,23 +207,22 @@
                 -moz-user-select: none;
                 -webkit-user-select: none;
                 align-items: center;
-                padding: 25px 30px;
-                flex-direction: row-reverse;
+                padding: 10px 0;
+                flex-direction: row;
 
                 .category-item {
                     display: flex;
                     align-items: center;
-                    background-color: rgba(255, 255, 255, 0.8);
+                    background-color: rgba(32,32,32, 0.3);
                     padding: 4px 5px;
                     border-radius: 5px;
-                    margin-left: 8px;
+                    margin-right: 8px;
                     backdrop-filter: blur(5px);
                     box-shadow: 0 0 10px rgba(32, 32, 32, 0.2);
 
                     .item-text {
                         font-size: 16px;
-                        //font-weight: bold;
-                        font-family: "iconfont";
+                        font-family: var(--font-sans-serif);
                         margin-top: -2px;
                     }
                 }
@@ -234,7 +233,7 @@
             z-index: 2;
             top: 20px;
             display: flex;
-            margin: -25px 20px 0;
+            margin: -30px 20px 0;
             position: sticky;
             padding: 8px 15px 8px 8px;
 
@@ -250,10 +249,12 @@
                 z-index: 11;
                 transition: width 0.1s linear;
             }
-
-            &.scrolled #banner-progressbar {
-                display: block;
+            .small-title{
+                font-family: var(--font-serif);
+                font-size:1.1em;
+                display:none;
             }
+
         }
 
         .banner-content {
@@ -270,6 +271,7 @@
             backdrop-filter: blur(30px);
             color: #363636;
             width: 100%;
+            font-family: sans-serif;
 
             .banner-author {
                 display: flex;
@@ -452,7 +454,7 @@
                 }
 
                 .article-category {
-                    padding: 15px 20px;
+                    padding: 15px 0px;
                 }
             }
 

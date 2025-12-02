@@ -5,9 +5,7 @@
 
 .article-content {
     // --- Theme Variables ---
-
-    --font-main: "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
-    --font-mono: "Cascadia Mono", Consolas, Monaco, monospace;
+    
 
     --color-accent: #8172ef;
     --color-text-main: #333333;
@@ -21,7 +19,7 @@
     --glass-blur: blur(10px);
 
     // --- Base Layout & Text ---
-    font-family: var(--font-main);
+    font-family: var(--font-sans-serif);
     font-size: 1rem;
     line-height: 1.8;
     color: var(--color-text-main);
