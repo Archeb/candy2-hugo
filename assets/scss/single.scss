@@ -11,6 +11,7 @@
     transition: background-color 0.5s, backdrop-filter 0.5s;
     height: 100%;
     z-index: 3;
+    display: flex;
 
     ::-webkit-scrollbar {
         display: none;
@@ -28,18 +29,143 @@
         color: rgba(255, 255, 255, 0.8);
     }
 
-    .bean-toc {
+    /* Bean TOC */
+    .article-toc {
         position: fixed;
-        margin: 50px;
-        padding: 20px;
+        left: calc(50% - 640px);
+        top: 100px;
+        width: 200px;
+        max-height: calc(100vh - 200px);
+        overflow-y: auto;
+        z-index: 10;
+        opacity:1;
+        transition: left 0.5s ease-in-out,opacity 0.5s ease-in-out;
+        scrollbar-width: none;
+        color: #ffffff;
+        animation: slideInLeft 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+
+        &::-webkit-scrollbar {
+            display: none;
+            /* Chrome/Safari */
+        }
+
+        nav#TableOfContents {
+            text-align: right;
+            transition: opacity 0.5s ease-in-out;
+
+            ul:first-child {
+                &::before {
+                    content: "目录";
+                    font-size: 24px;
+                    font-weight: bold;
+                    color: #dddddd;
+                    text-align: right;
+                    padding-bottom: 10px;
+                }
+
+                li:first-child {
+                    margin-top: 20px;
+                }
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
+
+                li {
+                    margin-bottom: 8px;
+
+                    a {
+                        color: #bbbbbb;
+                        text-decoration: none;
+                        font-size: 16px;
+                        transition: all 0.2s;
+                        display: block;
+                        padding: 2px 0;
+                        line-height: 1.4;
+
+                        &:hover {
+                            color: #ffffff;
+                            transform: translateX(-2px);
+                        }
+
+                        /* 高亮状态 */
+                        &.active {
+                            color: #66ccff;
+                            font-weight: bold;
+                            transform: translateX(-5px);
+                        }
+                    }
+
+                    ul {
+                        margin-top: -10px;
+                    }
+                }
+            }
+        }
     }
-    .bean-comment{
-        margin: 50px auto 50px 20px;
-        width: 400px;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        height: 500px;
-        transition: all 0.5s;
+
+    /* Bean Tools (Floating Buttons) */
+    .bean-tools {
+        position: fixed;
+        left: calc(50% + 440px);
+        bottom: 100px;
+        display: flex;
+        transition: left 0.5s ease-in-out;
+        flex-direction: column;
+        gap: 20px;
+        z-index: 10;
+
+        .tool-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: #555;
+            opacity: 0;
+            animation: slideInRight 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+
+            &:nth-child(1) {
+                animation-delay: 0.1s;
+            }
+
+            &:nth-child(2) {
+                animation-delay: 0.2s;
+            }
+
+            &:nth-child(3) {
+                animation-delay: 0.3s;
+            }
+
+            svg {
+                width: 22px;
+                height: 22px;
+                fill: currentColor;
+                transition: transform 0.3s;
+            }
+
+            &:hover {
+                transform: scale(1.15);
+                color: #000;
+                background-color: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+                svg {
+                    transform: scale(1.1);
+                }
+            }
+
+            &:active {
+                transform: scale(0.95);
+            }
+        }
     }
 
     .bean-read {
@@ -49,7 +175,7 @@
         overflow-y: scroll;
         overflow-x: hidden;
         height: calc(100vh - 100px);
-        transition: all 0.5s;
+        transition: all 0.5s ease-in-out;
 
         transition-timing-function: cubic-bezier(0.68, 0, 0.33, 1) !important;
         scrollbar-width: none;
@@ -61,7 +187,7 @@
             text-shadow: 0 0 5px rgba(35, 35, 35, 0.5), 0 0 5px rgba(35, 35, 35, 0.5);
             font-size: 32px;
             background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.6));
-            
+
             font-weight: bold;
         }
 
@@ -216,7 +342,90 @@
         }
     }
 
+
+    .article-comment {
+        width: 0px;
+        height: 400px;
+        overflow: hidden;
+        background-color: #eaeaea;
+        transition: all 0.5s ease-in-out;
+        visibility: hidden;
+
+        .comment-container {
+            min-width: 360px;
+            padding: 0 20px;
+            margin: 0 auto;
+
+            .gt-header-controls-tip {
+                display: none;
+            }
+        }
+    }
+
+    &.show-comment {
+        .bean-read {
+            margin: 50px 20px 50px auto;
+        }
+
+        .article-comment {
+            margin: 50px auto 50px 20px;
+            animation: article-comment-in 0.5s ease-in-out forwards;
+        }
+        .bean-tools{
+            left: calc(50% + 220px);
+        }
+        .article-toc{
+            #TableOfContents{
+                opacity: 0!important;
+            }
+            left: calc(50% - 870px);
+        }
+    }
+
+    &.closing-comment {
+        .bean-read {
+            margin: 50px 0px 50px auto;
+        }
+
+        .article-comment {
+            margin: 50px auto 50px 0px;
+            animation: article-comment-out 0.5s ease-in-out forwards;
+        }
+    }
+
     @import "./article-content";
+}
+
+@keyframes article-comment-in {
+    from {
+        width: 0px;
+        transform: scale(0.9);
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    to {
+        width: 400px;
+        opacity: 1;
+        transform: scale(1);
+        visibility: visible;
+    }
+}
+
+@keyframes article-comment-out {
+    from {
+        width: 400px;
+        opacity: 1;
+        transform: scale(1);
+        visibility: visible;
+    }
+
+    to {
+        width: 0px;
+        transform: scale(0.8);
+        opacity: 0;
+        visibility: hidden;
+    }
 }
 
 @media (max-width: 991px) {
@@ -258,6 +467,7 @@
                         }
                     }
                 }
+
                 #banner-progressbar {
                     visibility: hidden;
                 }
@@ -362,141 +572,7 @@
     }
 }
 
-/* Bean TOC */
-.article-toc {
-    position: fixed;
-    left: calc(50% - 650px);
-    top: 100px;
-    width: 200px;
-    max-height: calc(100vh - 200px);
-    overflow-y: auto;
-    z-index: 10;
-    transition: all 0.3s;
-    scrollbar-width: none;
-    color: #ffffff;
-    animation: slideInLeft 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 
-    &::-webkit-scrollbar {
-        display: none;
-        /* Chrome/Safari */
-    }
-
-    nav#TableOfContents {
-        text-align: right;
-
-        ul:first-child {
-            &::before {
-                content: "目录";
-                font-size: 24px;
-                font-weight: bold;
-                color: #dddddd;
-                text-align: right;
-                padding-bottom: 10px;
-            }
-
-            li:first-child {
-                margin-top: 20px;
-            }
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-
-            li {
-                margin-bottom: 8px;
-
-                a {
-                    color: #bbbbbb;
-                    text-decoration: none;
-                    font-size: 16px;
-                    transition: all 0.2s;
-                    display: block;
-                    padding: 2px 0;
-                    line-height: 1.4;
-
-                    &:hover {
-                        color: #ffffff;
-                        transform: translateX(-2px);
-                    }
-
-                    /* 高亮状态 */
-                    &.active {
-                        color: #66ccff;
-                        font-weight: bold;
-                        transform: translateX(-5px);
-                    }
-                }
-
-                ul {
-                    margin-top: -10px;
-                }
-            }
-        }
-    }
-}
-
-/* Bean Tools (Floating Buttons) */
-.bean-tools {
-    position: fixed;
-    left: calc(50% + 440px);
-    bottom: 100px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    z-index: 10;
-
-    .tool-btn {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(20px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        color: #555;
-        opacity: 0;
-        animation: slideInRight 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-
-        &:nth-child(1) {
-            animation-delay: 0.1s;
-        }
-
-        &:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        &:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-
-        svg {
-            width: 22px;
-            height: 22px;
-            fill: currentColor;
-            transition: transform 0.3s;
-        }
-
-        &:hover {
-            transform: scale(1.15);
-            color: #000;
-            background-color: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-
-            svg {
-                transform: scale(1.1);
-            }
-        }
-
-        &:active {
-            transform: scale(0.95);
-        }
-    }
-}
 
 /* Hide on smaller screens */
 @media (max-width: 1350px) {
