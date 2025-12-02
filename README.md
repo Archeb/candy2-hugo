@@ -1,280 +1,348 @@
-# Candy2 Theme (Hugo Version)
+# Candy2 主题 (Hugo 版本)
 
-A beautiful, modern Hugo theme with glassmorphism effects and horizontal scrolling design. 
+一个优雅现代的 Hugo 主题，采用磨砂玻璃效果和水平滚动设计。
 
-![Candy2 Hugo Theme](https://i.loli.net/2021/02/20/uzfTSEHPlFOeR4r.png)
+![Candy2 Hugo 主题](https://i.loli.net/2021/02/20/uzfTSEHPlFOeR4r.png)
 
-## ✨ Features
+## ✨ 特性
 
-- 🎨 **Glassmorphism Design** - Beautiful frosted glass effects with backdrop-filter
-- 📜 **Horizontal Scrolling** - Unique horizontal card-based navigation on desktop
-- 🎭 **Modal Post View** - Smooth modal animations for reading posts using View Transitions API
-- 📱 **Fully Responsive** - Seamless experience on mobile and desktop
-- ⚡ **Lightning Fast** - Static site generation with Hugo v0.152.2+
-- 🎬 **Smooth Animations** - Scale-up, slide-in, and fade effects
-- 🔖 **Tag Support** - Organize posts with tags
-- 💎 **Original Visual Design** - All aesthetic elements preserved from Candy2
+- 🎨 **毛玻璃设计** - 精美的磨砂玻璃效果，支持背景模糊
+- 📜 **水平滚动** - 桌面端独特的水平卡片式导航
+- 🎭 **模态框文章视图** - 使用 View Transitions API 实现平滑的模态框动画
+- 📱 **完全响应式** - 在移动端和桌面端都有流畅的体验
+- ⚡ **极速加载** - 基于 Hugo v0.152.2+ 的静态站点生成
+- 🎬 **流畅动画** - 缩放、滑入和淡入淡出效果
+- 🔖 **标签和分类支持** - 使用标签和分类组织文章
+- 💬 **评论系统支持** - 轻松集成 utteranc.es、Gitalk 等评论组件
+- 💎 **原创视觉设计** - 保留了 Candy2 所有美学元素
 
-## 🚀 Quick Start
+## 🚀 快速开始
 
-### Installation
+### 安装
 
-1. **Install Hugo Extended** (v0.152.2 or later required):
+1. **安装 Hugo Extended**（需要 v0.152.2 或更高版本）：
 ```bash
-# Check your Hugo version
+# 检查你的 Hugo 版本
 hugo version
 
-# Download Hugo Extended v0.152.2 if needed
+# 如果需要，下载 Hugo Extended v0.152.2
 # https://github.com/gohugoio/hugo/releases/tag/v0.152.2
 ```
 
-2. **Add the theme to your Hugo site**:
+2. **将主题添加到你的 Hugo 站点**：
 
-   **Option A: Git Submodule (Recommended)**
+   **方法 A：Git 子模块（推荐）**
    ```bash
    cd your-hugo-site
-   git submodule add https://github.com/Archeb/candy2-hugo.git themes/candy2
+   git submodule add https://github.com/Archeb/candy2-hugo.git themes/candy2-hugo
    ```
 
-   **Option B: Git Clone**
+   **方法 B：Git 克隆**
    ```bash
    cd your-hugo-site/themes
-   git clone https://github.com/Archeb/candy2-hugo.git candy2
+   git clone https://github.com/Archeb/candy2-hugo.git candy2-hugo
    ```
 
-   **Option C: Download**
-   - Download the [latest release](https://github.com/Archeb/candy2-hugo/releases)
-   - Extract to `your-hugo-site/themes/candy2`
+   **方法 C：直接下载**
+   - 下载[最新版本](https://github.com/Archeb/candy2-hugo/releases)
+   - 解压到 `your-hugo-site/themes/candy2-hugo`
 
-3. **Configure your site**:
+3. **配置你的站点**：
 
-   Update `hugo.toml` (or `config.toml`):
+   在站点根目录创建或编辑 `hugo.toml`（或 `config.toml`）：
    ```toml
-  baseURL = 'https://example.com/'
-  languageCode = 'zh-CN'
-  title = 'Your Blog Name'
-  theme = 'candy2-hugo'
+   baseURL = 'https://example.com/'
+   languageCode = 'zh-CN'
+   title = '你的博客名称'
+   theme = 'candy2-hugo'
 
-  [pagination]
-    pagerSize = 100
+   [pagination]
+     pagerSize = 100
 
-  [params]
-    author = "Your Name"
-    description = "A beautiful Hugo blog theme"
-    avatar = "/img/icon.png"
-    icon = "/img/icon.png"
-    defaultImage = "/img/cover1.jpg"
-    copyright = "Your Name © 2025"
-    authorImage = "/img/icon.png"
+   [params]
+     author = "你的名字"
+     description = "一个优雅的 Hugo 博客主题"
+     avatar = "/img/icon.png"
+     icon = "/img/icon.png"
+     defaultImage = "/img/cover1.jpg"
+     copyright = "你的名字 © 2025"
+     authorImage = "/img/icon.png"
 
-  [markup]
-    [markup.highlight]
-      style = 'monokai'
-      lineNos = false
-    [markup.goldmark]
-      [markup.goldmark.renderer]
-        unsafe = true
+   [markup]
+     [markup.highlight]
+       style = 'monokai'
+       lineNos = false
+     [markup.goldmark]
+       [markup.goldmark.renderer]
+         unsafe = true
 
-  [[menu.main]]
-    name = "关于"
-    url = "/about/"
-    weight = 5
-    pre = 'SVG ICON HTML'
-
-
+   [[menu.main]]
+     name = "关于"
+     url = "/about/"
+     weight = 5
    ```
 
-4. **Start the development server**:
+4. **启动开发服务器**：
    ```bash
    hugo server
    ```
 
-5. Visit `http://localhost:1313`
+5. 访问 `http://localhost:1313`
 
-## 📝 Creating Content
+## 📝 创建内容
 
-### New Post
+### 新建文章
 
 ```bash
 hugo new content posts/my-first-post.md
 ```
 
-### Post Front Matter
+### 文章头信息
 
 ```yaml
 ---
-title: "My First Post"
+title: "我的第一篇文章"
 date: 2024-11-24T10:00:00+08:00
 draft: false
-tags: ["tech", "hugo"]
-image: "/img/cover1.jpg"
-description: "A short description of your post"
+tags: ["技术", "hugo"]
+categories: ["开发"]
+featuredImage: "/img/cover1.jpg"
+description: "文章的简短描述"
 ---
 
-Your content here in Markdown format...
+在这里编写你的 Markdown 内容...
 ```
 
-### Required Front Matter Fields
+### 必需的头信息字段
 
-- `title`: Post title
-- `date`: Publication date
-- `tags`: Array of tags (optional but recommended)
-- `image`: Featured image URL (optional, uses defaultImage if not set)
-- `description`: Short description for card preview
+- `title`: 文章标题
+- `date`: 发布日期
+- `tags`: 标签数组（可选但推荐）
+- `categories`: 分类数组（可选）
+- `featuredImage`: 特色图片 URL（可选，未设置时使用 defaultImage）
+- `description`: 文章简短描述，用于卡片预览
 
-## 🎨 Customization
+## 🎨 自定义
 
-### Colors and Styling
+### 颜色和样式
 
-Edit `static/css/style.css` to customize colors, animations, and effects.
+编辑 `assets/scss/` 目录下的 SCSS 文件来自定义颜色、动画和效果。
 
-### Menu Items
+主要样式文件：
+- `assets/scss/style.scss` - 主样式入口
+- `assets/scss/bean-main.scss` - 导航栏样式
+- `assets/scss/single.scss` - 文章页面样式
+- `assets/scss/article-content.scss` - 文章内容样式
 
-Add menu items in `hugo.toml`:
+### 菜单项
+
+在 `hugo.toml` 中添加菜单项：
 
 ```toml
 [[menu.main]]
-  name = "Custom Page"
+  name = "自定义页面"
   url = "/custom/"
   weight = 4
-  pre = "&#xe614;"  # Optional icon
 ```
 
-### Avatar and Images
+### 头像和图片
 
-Place your images in `static/img/` and reference them in params:
+将你的图片放在 `static/img/` 目录，并在配置中引用：
 
 ```toml
 [params]
   avatar = "/img/your-avatar.png"
   defaultImage = "/img/your-default-cover.jpg"
+  authorImage = "/img/your-author.png"
 ```
 
-## 📁 Theme Structure
+### 添加评论系统
+
+主题支持通过配置文件添加任意评论组件。在 `hugo.toml` 中添加 `customComments` 参数：
+
+#### 方法 1：直接在配置文件中插入 HTML
+
+```toml
+[params]
+  customComments = '''
+<script src="https://utteranc.es/client.js"
+        repo="你的用户名/你的仓库"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+'''
+```
+
+#### 方法 2：使用 Gitalk
+
+```toml
+[params]
+  customComments = '''
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script>
+const gitalk = new Gitalk({
+  clientID: '你的 GitHub Application Client ID',
+  clientSecret: '你的 GitHub Application Client Secret',
+  repo: '你的仓库名',
+  owner: '你的 GitHub 用户名',
+  admin: ['你的 GitHub 用户名'],
+  id: location.pathname,
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
+</script>
+'''
+```
+
+#### 方法 3：使用 Valine
+
+```toml
+[params]
+  customComments = '''
+<div id="vcomments"></div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+<script>
+new Valine({
+    el: '#vcomments',
+    appId: '你的 LeanCloud appId',
+    appKey: '你的 LeanCloud appKey'
+})
+</script>
+'''
+```
+
+点击侧边的"查看评论"按钮会展开评论区域。
+
+## 📁 主题结构
 
 ```
-candy2/
+candy2-hugo/
 ├── archetypes/
-│   └── default.md          # Content template
+│   └── default.md          # 内容模板
 ├── assets/
-│   ├── css/
-│   │   └── main.css        # Processed CSS
-│   └── js/
-│       └── main.js         # Theme JavaScript (if any)
+│   └── scss/               # SCSS 样式文件
+│       ├── style.scss      # 主样式入口
+│       ├── bean-main.scss  # 导航栏样式
+│       ├── single.scss     # 文章页样式
+│       └── article-content.scss  # 文章内容样式
 ├── layouts/
 │   ├── _default/
-│   │   ├── baseof.html     # Base template
-│   │   ├── list.html       # List page template
-│   │   └── single.html     # Single post template (modal)
-│   ├── index.html          # Homepage template
+│   │   ├── baseof.html     # 基础模板
+│   │   ├── list.html       # 列表页模板
+│   │   └── single.html     # 文章页模板（模态框）
+│   ├── index.html          # 首页模板
 │   └── partials/
-│       ├── head.html       # HTML head
-│       ├── header.html     # Header section
-│       ├── navigation.html # Sidebar navigation
-│       └── footer.html     # Footer
+│       ├── head/           # Head 相关部分
+│       │   ├── head.html   # HTML head
+│       │   └── opengraph.html  # OpenGraph 元数据
+│       ├── navigation.html # 侧边栏导航
+│       └── article-card.html   # 文章卡片
 ├── static/
-│   ├── css/
-│   │   └── style.css       # Main stylesheet (690 lines)
 │   ├── js/
-│   │   └── candy2.js       # Interactive features
-│   └── img/                # Theme images
-├── exampleSite/            # Example site for testing
-├── theme.toml              # Theme metadata
-├── README.md               # This file
-└── LICENSE                 # GPL-3.0 License
+│   │   └── candy2.js       # 交互功能脚本
+│   └── img/                # 主题图片
+├── exampleSite/            # 示例站点
+├── theme.toml              # 主题元数据
+├── README.md               # 本文件
+└── LICENSE                 # GPL-3.0 许可证
 ```
 
-## 🎬 Interactive Features
+## 🎬 交互特性
 
-### Bean-Main Scroll Behavior
+### 导航栏滚动行为
 
-The left navigation sidebar (bean-main) automatically shrinks from full width to mini size as you scroll horizontally, creating more space for article cards.
+左侧导航栏（bean-main）会在你水平滚动时自动从全宽缩小到迷你尺寸，为文章卡片创造更多空间。
 
-### Modal Post View
+### 模态框文章视图
 
-Clicking on a post card opens it in a modal overlay with:
-- Smooth scale-up animation (0.7 → 1.0)
-- View Transitions API for seamless navigation
-- Scroll position preservation
-- Browser history integration
-- ESC key or close button to exit
+点击文章卡片会在模态框覆盖层中打开文章，具有以下特性：
+- 平滑的缩放动画（0.7 → 1.0）
+- 使用 View Transitions API 实现无缝导航
+- 保留滚动位置
+- 浏览器历史记录集成
+- 按 ESC 键或点击关闭按钮退出
 
-### Post Slide-In Animation
+### 文章滑入动画
 
-Posts slide in from the right when you start scrolling and remain visible (don't fade back out).
+当你开始滚动时，文章会从右侧滑入并保持可见（不会淡出）。
 
-## 🌐 Browser Support
+### 目录和工具按钮
 
-- ✅ **Chrome/Edge 111+** - Full View Transitions API support
-- ✅ **Firefox** - Graceful fallback for View Transitions
-- ✅ **Safari** - Graceful fallback, may have limited backdrop-filter support
-- ✅ **Mobile browsers** - Fully responsive with vertical scrolling
+- 左侧显示文章目录（仅桌面端）
+- 右侧悬浮工具按钮：
+  - 返回顶部
+  - 查看评论
+  - 分享文章
 
-## 🔧 Build for Production
+## 🌐 浏览器支持
+
+- ✅ **Chrome/Edge 111+** - 完整的 View Transitions API 支持
+- ✅ **Firefox** - View Transitions 优雅降级
+- ✅ **Safari** - View Transitions 优雅降级，背景模糊可能有限制
+- ✅ **移动浏览器** - 完全响应式，垂直滚动
+
+## 🔧 生产环境构建
 
 ```bash
-# Generate static site
+# 生成静态站点
 hugo --minify
 
-# Output will be in public/ directory
+# 输出将在 public/ 目录
 ```
 
-## 📦 ExampleSite
+## 📦 示例站点
 
-The theme includes an `exampleSite/` directory with:
-- Sample configuration
-- Example posts demonstrating features
-- Proper content structure
+主题包含一个 `exampleSite/` 目录，其中包含：
+- 示例配置
+- 演示主题功能的示例文章
+- 正确的内容结构
 
-To run the example site:
+运行示例站点：
 
 ```bash
-cd exampleSite
-hugo server
+# 在主题根目录运行
+hugo server -s exampleSite -D --themesDir=../.. --theme=candy2-hugo
 ```
 
-## 🐛 Troubleshooting
+## 🐛 故障排除
 
-### Posts not appearing
+### 文章不显示
 
-- Ensure `draft: false` in front matter
-- Check that content is in `content/posts/` directory
-- Verify `hugo.toml` has correct theme name: `theme = 'candy2'`
+- 确保头信息中设置了 `draft: false`
+- 检查内容是否在 `content/posts/` 目录
+- 验证 `hugo.toml` 中主题名称正确：`theme = 'candy2-hugo'`
 
-### Styles not loading
+### 样式未加载
 
-- Use Hugo Extended version (required for CSS processing)
-- Clear browser cache
-- Check browser console for errors
+- 使用 Hugo Extended 版本（CSS 处理必需）
+- 清除浏览器缓存
+- 检查浏览器控制台是否有错误
 
-### Modal not working
+### 模态框不工作
 
-- Verify JavaScript is enabled
-- Check browser supports modern JavaScript features
-- View Transitions API may not be available in all browsers (fallback provided)
+- 验证 JavaScript 已启用
+- 检查浏览器是否支持现代 JavaScript 特性
+- View Transitions API 可能在某些浏览器中不可用（已提供降级方案）
 
-## 🙏 Credits
+### 评论系统不显示
 
-- **Original Candy2 Theme**: [Archeb](https://github.com/Archeb) - Vue.js version
-- **Hugo**: [GoHugo.io](https://gohugo.io) - Static site generator
+- 确保在 `hugo.toml` 的 `[params]` 部分添加了 `customComments` 参数
+- 检查 `[markup.goldmark.renderer]` 中设置了 `unsafe = true`
+- 在浏览器控制台查看是否有 JavaScript 错误
+- 确认第三方评论服务的配置信息（如 repo、clientID 等）正确
 
-## 📄 License
+## 🙏 致谢
 
-GPL-3.0 - See [LICENSE](LICENSE) file for details.
+- **原始 Candy2 主题**：[Archeb](https://github.com/Archeb) - Vue.js 版本
+- **Hugo**：[GoHugo.io](https://gohugo.io) - 静态网站生成器
 
-Inherits license from the original [Candy2 project](https://github.com/Archeb/Candy2).
+## 📄 许可证
 
-## 📸 Screenshots
+GPL-3.0 - 详见 [LICENSE](LICENSE) 文件。
 
-**Homepage with Horizontal Scrolling:**
-![Homepage](https://github.com/user-attachments/assets/a2baddfb-fb5e-466b-9acc-9a6ceb8c7c37)
-
-**Modal Post View:**
-![Modal View](https://github.com/user-attachments/assets/e4a58d96-b40e-4ef3-9dc4-5f65e23ab7b1)
-
-**Initial State:**
-![Initial State](https://github.com/user-attachments/assets/8f4e3dd8-c66e-4833-988b-4bc23cee041c)
-
----
-
-Made with ♥ using Hugo
+继承自原始 [Candy2 项目](https://github.com/Archeb/Candy2) 的许可证。

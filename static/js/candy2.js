@@ -55,7 +55,6 @@
     function init() {
         setupBeanMainScroll();
         setupArticleModal();
-        setupViewTransitions();
         setupResponsive();
         setupHorizontalWheel();
         setupMobileScrollBehavior();
@@ -318,21 +317,43 @@
     }
 
     /**
-     * Global click handler for article modal interactions
+     * Global click handler for all navigation interactions
      * This handler is registered ONCE to prevent multiple registrations
+     * Handles: article links, navigation links, modal close buttons
      */
     function handleGlobalClick(e) {
-        // Intercept article links for smooth transitions
+        // 1. Intercept article links (.bean-article) for smooth transitions
         const articleLink = e.target.closest('.bean-article');
         if (articleLink && articleLink.href) {
             e.preventDefault();
-
-            // Navigate to article page with View Transitions
             navigateToArticle(articleLink.href);
             return;
         }
 
-        // Close button - navigate back to home
+        // 2. Intercept navigation links (.link-item) for smooth transitions
+        const navLink = e.target.closest('a.link-item');
+        if (navLink && navLink.href && !navLink.target) {
+            const url = new URL(navLink.href);
+
+            // If clicking the same page, scroll to the beginning
+            if (url.pathname == window.location.pathname) {
+                e.preventDefault();
+                const container = document.getElementById('container');
+                if (container) {
+                    smoothScrollTo(container, state.scrollThreshold, 600, 'left');
+                }
+                return;
+            }
+
+            // Only intercept same-origin links (not external or anchor links)
+            if (url.origin === window.location.origin && !navLink.href.includes('#')) {
+                e.preventDefault();
+                navigateWithTransition(navLink.href);
+                return;
+            }
+        }
+
+        // 3. Close button - navigate back to home
         const closeBtn = e.target.closest('.modal-close');
         if (closeBtn) {
             e.preventDefault();
@@ -340,7 +361,7 @@
             return;
         }
 
-        // Mobile close button in banner-tools (mobile only)
+        // 4. Mobile close button in banner-tools (mobile only)
         const mobileCloseBtn = e.target.closest('.mobile-close-btn');
         if (mobileCloseBtn) {
             e.preventDefault();
@@ -348,7 +369,7 @@
             return;
         }
 
-        // Click outside modal to close
+        // 5. Click outside modal to close
         if (e.target.classList.contains('modal')) {
             e.preventDefault();
             closeArticleModal();
@@ -657,7 +678,6 @@
      * Close article modal with slide-up fade-out animation
      */
     async function closeArticleModal() {
-        debugger;
         const targetModal = document.querySelector('.modal');
 
         // Add closing animation
@@ -683,7 +703,6 @@
 
             return;
         }
-        debugger;
         // For default modal pages (bean-read), use original logic
         history.pushState({ page: 'home' }, '', '/');
     }
@@ -693,31 +712,6 @@
      */
     function handleModalPopState(event) {
         // Handle popstate events
-    }
-
-    /**
-     * Setup View Transitions API for navigation
-     */
-    function setupViewTransitions() {
-        // Intercept navigation links for smooth transitions
-        document.addEventListener('click', function (e) {
-            const link = e.target.closest('a.link-item');
-            if (link && link.href && !link.target) {
-                const url = new URL(link.href);
-
-                if (url.pathname == window.location.pathname) {
-                    e.preventDefault();
-                    // Need to scroll to the beginning
-                    smoothScrollTo(container, state.scrollThreshold, 600, 'left');
-                    return;
-                }
-                // Only intercept same-origin links
-                if (url.origin === window.location.origin && !link.href.includes('#')) {
-                    e.preventDefault();
-                    navigateWithTransition(link.href);
-                }
-            }
-        });
     }
 
     /**

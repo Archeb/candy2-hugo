@@ -74,7 +74,12 @@
                     </div>
                     {{ end }}
                 </div>
-
+                    <!-- 评论组件区域 / Comments Section -->
+                    {{ if .Site.Params.customComments }}
+                        <div class="article-comment">
+                        {{ .Site.Params.customComments | safeHTML }}
+                        </div>
+                    {{ end }}
                 <div class="bean-tools">
                     <div class="tool-btn" id="btn-top" title="回到顶部"
                         onclick="document.querySelector('.bean-read').scrollTo({top: 0, behavior: 'smooth'})">
@@ -84,6 +89,7 @@
                                 fill="currentColor" />
                         </svg>
                     </div>
+                    {{ if .Site.Params.customComments }}
                     <div class="tool-btn" id="btn-comment" title="查看评论"
                         onclick="document.querySelector('.article-comment').scrollIntoView({behavior: 'smooth'})">
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
@@ -92,6 +98,7 @@
                                 fill="currentColor" />
                         </svg>
                     </div>
+                    {{ end }}
                     <div class="tool-btn" id="btn-share" title="分享"
                         onclick="navigator.share({title: document.title, url: window.location.href})">
                         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
