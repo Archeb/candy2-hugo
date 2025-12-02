@@ -355,6 +355,8 @@
             min-width: 360px;
             padding: 0 20px;
             margin: 0 auto;
+            overflow: scroll;
+            height: 400px;
 
             .gt-header-controls-tip {
                 display: none;

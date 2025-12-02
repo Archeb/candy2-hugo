@@ -158,33 +158,20 @@ description: "文章的简短描述"
 
 ### 添加评论系统
 
-主题支持通过配置文件添加任意评论组件。在 `hugo.toml` 中添加 `customComments` 参数：
+主题支持通过配置文件添加任意评论组件。在 `hugo.toml` 中添加 `customHeaders` 和 `customComments` 参数：
 
-#### 方法 1：直接在配置文件中插入 HTML
-
-```toml
-[params]
-  customComments = '''
-<script src="https://utteranc.es/client.js"
-        repo="你的用户名/你的仓库"
-        issue-term="pathname"
-        theme="github-light"
-        crossorigin="anonymous"
-        async>
-</script>
-'''
-```
-
-#### 方法 2：使用 Gitalk
+#### 例：使用 Gitalk
 
 ```toml
 [params]
-  customComments = '''
-<div id="gitalk-container"></div>
+  customHeaders = '''
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+'''
+  customComments = '''
+<div id="gitalk-container"></div>
 <script>
-const gitalk = new Gitalk({
+new Gitalk({
   clientID: '你的 GitHub Application Client ID',
   clientSecret: '你的 GitHub Application Client Secret',
   repo: '你的仓库名',
@@ -192,26 +179,7 @@ const gitalk = new Gitalk({
   admin: ['你的 GitHub 用户名'],
   id: location.pathname,
   distractionFreeMode: false
-})
-gitalk.render('gitalk-container')
-</script>
-'''
-```
-
-#### 方法 3：使用 Valine
-
-```toml
-[params]
-  customComments = '''
-<div id="vcomments"></div>
-<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
-<script>
-new Valine({
-    el: '#vcomments',
-    appId: '你的 LeanCloud appId',
-    appKey: '你的 LeanCloud appKey'
-})
+}).render('gitalk-container')
 </script>
 '''
 ```

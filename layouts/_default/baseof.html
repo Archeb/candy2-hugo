@@ -19,7 +19,9 @@
     <link rel="stylesheet" href="{{ $style.RelPermalink }}">
     <link rel="icon" type="image/x-icon" href="{{ .Site.Params.icon }}">
     <meta name="view-transition" content="same-origin">
-    
+    {{ if .Site.Params.customHeaders }}
+        {{ .Site.Params.customHeaders | safeHTML }}
+    {{ end }}
     {{ partial "head/opengraph.html" . }}
     {{ block "head" . }}{{ end }}
 </head>

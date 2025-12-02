@@ -640,6 +640,28 @@ async function navigateToSinglePage(url, newDoc) {
         url: url,
     };
     history.pushState(state, "", url);
+
+    // Execute scripts in the comment section
+    const commentSection = modal.querySelector('.article-comment');
+    if (commentSection) {
+        const scripts = commentSection.querySelectorAll('script');
+        scripts.forEach(oldScript => {
+            const newScript = document.createElement('script');
+            
+            Array.from(oldScript.attributes).forEach(attr => {
+                newScript.setAttribute(attr.name, attr.value);
+            });
+            
+            if (oldScript.src) {
+                newScript.src = oldScript.src;
+                newScript.async = oldScript.async || false;
+            } else {
+                newScript.textContent = oldScript.textContent;
+            }
+            
+            oldScript.parentNode.replaceChild(newScript, oldScript);
+        });
+    }
 }
 
 /**
