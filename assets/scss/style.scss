@@ -42,7 +42,7 @@ a {
 }
 
 .bean-space {
-	width: 5vw;
+	width: 40px;
 	height: 80px;
 	flex-shrink: 0;
 }
@@ -126,6 +126,43 @@ a {
 	transform: scale(0.99);
 }
 
+/* Pagination Styles */
+.pagination-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin: 0 0 0 40px;
+    flex-shrink: 0;
+    font-family: var(--font-sans-serif);
+}
+
+.pagination-next {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    transition: all .3s 
+cubic-bezier(.68, 0, .33, 1);
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 0 5px rgba(32, 32, 32, .1) !important;
+}
+
+.pagination-next:hover {
+	transform: translateX(5px);
+}
+
+.pagination-next svg {
+	width: 32px;
+	height: 32px;
+}
+
+
 
 /* Modal Opening Animation - Scale up and pop in */
 .bean-read.modal-opening {
@@ -145,7 +182,7 @@ a {
 }
 
 /* Modal Closing Animation - Slide up and fade out */
-.bean-read.modal-closing {
+.modal-visible-container.modal-closing {
 	animation: modalPopout 0.4s cubic-bezier(0.68, 0, 0.33, 1) forwards;
 }
 
@@ -487,6 +524,29 @@ a {
 	.bean-space {
 		width: 1px !important;
 		height: 40px !important;
+	}
+
+	.pagination-container {
+		margin: 20px 0;
+		gap: 15px;
+	}
+
+	.pagination-info {
+		font-size: 16px;
+	}
+
+	.pagination-info .current-page {
+		font-size: 20px;
+	}
+
+	.pagination-next {
+		width: 45px;
+		height: 45px;
+	}
+
+	.pagination-next svg {
+		width: 28px;
+		height: 28px;
 	}
 
 	.bean-in-animation {

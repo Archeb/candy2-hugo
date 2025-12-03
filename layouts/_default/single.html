@@ -18,7 +18,7 @@
                 <div class="article-toc">
                     {{ .TableOfContents }}
                 </div>
-
+                <div class="modal-visible-container">
                 <div class="bean bean-read" style="transform: translate(0, 0);">
                     <div class="modal-close">×</div>
                     <div class="article-cover"
@@ -87,6 +87,7 @@
                             </div>
                         </div>
                     {{ end }}
+                </div>
                 <div class="bean-tools">
                     <div class="tool-btn" id="btn-top" title="回到顶部"
                         onclick="document.querySelector('.bean-read').scrollTo({top: 0, behavior: 'smooth'})">

@@ -28,6 +28,11 @@
         text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
         color: rgba(255, 255, 255, 0.8);
     }
+    .modal-visible-container{
+        margin:0 auto;
+        display:flex;
+        height:100%;
+    }
 
     /* Bean TOC */
     .article-toc {
@@ -170,7 +175,7 @@
 
     .bean-read {
         background-color: #f6f6f6;
-        margin: 50px auto;
+        margin: 50px 0;
         width: 800px;
         overflow-y: scroll;
         overflow-x: hidden;
@@ -347,9 +352,9 @@
 
     .article-comment {
         width: 0px;
-        height: 400px;
+        height: calc(100vh - 380px);
         overflow: hidden;
-        background-color: #f6f6f6;
+        background-color: #eeeeee;
         transition: all 0.5s ease-in-out;
         visibility: hidden;
 
@@ -358,7 +363,7 @@
             padding: 0 20px;
             margin: 0 auto;
             overflow: scroll;
-            height: 400px;
+            height: calc(100vh - 380px);
 
             .gt-header-controls-tip {
                 display: none;
@@ -368,11 +373,11 @@
 
     &.show-comment {
         .bean-read {
-            margin: 50px 20px 50px auto;
+            margin: 50px 0 50px 0;
         }
 
         .article-comment {
-            margin: 50px auto 50px 20px;
+            margin: 50px 0 50px 40px;
             animation: article-comment-in 0.5s ease-in-out forwards;
         }
         .bean-tools{
@@ -388,11 +393,11 @@
 
     &.closing-comment {
         .bean-read {
-            margin: 50px 0px 50px auto;
+            margin: 50px 0px 50px 0;
         }
 
         .article-comment {
-            margin: 50px auto 50px 0px;
+            margin: 50px 0 50px 0px;
             animation: article-comment-out 0.5s ease-in-out forwards;
         }
     }
@@ -436,6 +441,9 @@
     .modal {
         .modal-close {
             display: block;
+        }
+        .modal-visible-container{
+            width:100%;
         }
 
         .bean-read {

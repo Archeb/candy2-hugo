@@ -57,7 +57,7 @@ hugo version
    theme = 'candy2-hugo'
 
    [pagination]
-     pagerSize = 100
+     pagerSize = 10
 
    [params]
      author = "你的名字"

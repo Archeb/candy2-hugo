@@ -57,6 +57,7 @@ function init() {
     setupMobileScrollBehavior();
     setupTocHighlight();
     setupProgressBar();
+    setupPagination(); // Setup automatic pagination
 
     // Initial state
     checkMobileMode();
@@ -255,6 +256,8 @@ function setupHorizontalWheel() {
     // State for smooth scrolling
     let targetScrollLeft = container.scrollLeft;
     let isAnimating = false;
+    let lastScrollLeft = container.scrollLeft;
+    let isWheelScrolling = false;
     const lerpFactor = 0.15; // Controls the "weight" or "smoothness" (0.1 = heavy/smooth, 0.3 = snappy)
 
     // Animation loop
@@ -274,6 +277,7 @@ function setupHorizontalWheel() {
         if (Math.abs(diff) < 0.5) {
             container.scrollLeft = targetScrollLeft;
             isAnimating = false;
+            isWheelScrolling = false;
             return;
         }
 
@@ -281,6 +285,29 @@ function setupHorizontalWheel() {
         container.scrollLeft = current + diff * lerpFactor;
         requestAnimationFrame(updateScroll);
     }
+
+    // Listen for manual scroll (e.g., dragging scrollbar)
+    container.addEventListener("scroll", function() {
+        // Skip if this is a programmatic scroll
+        if (state.activeProgrammaticScrolls > 0) {
+            lastScrollLeft = container.scrollLeft;
+            return;
+        }
+
+        // Skip if this scroll is caused by our wheel animation
+        if (isWheelScrolling) {
+            lastScrollLeft = container.scrollLeft;
+            return;
+        }
+
+        // Detect manual scroll: if scrollLeft changed but we didn't cause it
+        if (container.scrollLeft !== lastScrollLeft) {
+            // User manually scrolled, sync target position
+            targetScrollLeft = container.scrollLeft;
+            lastScrollLeft = container.scrollLeft;
+            isAnimating = false;
+        }
+    });
 
     container.addEventListener(
         "wheel",
@@ -290,6 +317,8 @@ function setupHorizontalWheel() {
             // Only convert vertical scrolling to horizontal on desktop
             if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
                 e.preventDefault();
+
+                isWheelScrolling = true;
 
                 // If animation was stopped, sync target to current position
                 if (!isAnimating) {
@@ -343,13 +372,9 @@ function handleGlobalClick(e) {
     if (navLink && navLink.href && !navLink.target) {
         const url = new URL(navLink.href);
 
-        // If clicking the same page, scroll to the beginning
+        // If clicking the same page
         if (url.pathname == window.location.pathname) {
             e.preventDefault();
-            const container = document.getElementById("container");
-            if (container) {
-                smoothScrollTo(container, state.scrollThreshold, 600, "left");
-            }
             return;
         }
 
@@ -359,6 +384,14 @@ function handleGlobalClick(e) {
             navigateWithTransition(navLink.href);
             return;
         }
+    }
+
+    // Handle pagination link clicks
+    const paginationNext = e.target.closest(".pagination-next");
+    if (paginationNext && paginationNext.href && !paginationNext.target) {
+        e.preventDefault();
+        navigateWithTransition(paginationNext.href);
+        return;
     }
 
     // 3. Close button - navigate back to home
@@ -378,11 +411,12 @@ function handleGlobalClick(e) {
     }
 
     // 5. Click outside modal to close
-    if (e.target.classList.contains("modal")) {
+    if (e.target.classList.contains("modal") || e.target.classList.contains("modal-visible-container")) {
         e.preventDefault();
         closeArticleModal();
         return;
     }
+
 }
 
 /**
@@ -466,7 +500,7 @@ function isArticlePage() {
  */
 function isListPage(url) {
     const path = new URL(url, window.location.origin).pathname;
-    return path.includes("/tags/") || path.includes("/categories/");
+    return path.includes("/tags/") || path.includes("/categories/") || path.includes("/page/");
 }
 
 /**
@@ -713,9 +747,9 @@ async function closeArticleModal() {
     targetModal.style.transition = "opacity 0.4s ease";
     targetModal.style.opacity = "0";
 
-    var beanRead = targetModal.querySelector(".bean-read");
+    var modalVisibleContainer = targetModal.querySelector(".modal-visible-container");
 
-    if (beanRead) beanRead.classList.add("modal-closing");
+    if (modalVisibleContainer) modalVisibleContainer.classList.add("modal-closing");
 
     // Wait for animation to complete
     await new Promise((resolve) => setTimeout(resolve, 400));
@@ -830,24 +864,6 @@ function checkMobileMode() {
 
     // Always recalculate scroll threshold on resize
     state.scrollThreshold = Math.floor(window.innerWidth * 0.45 - 100);
-}
-
-/**
- * Check for low performance mode (simplified GPU detection)
- */
-function checkLowPerformance() {
-    // Check if backdrop-filter is supported
-    if (!CSS.supports("backdrop-filter", "blur(10px)")) {
-        return true;
-    }
-
-    // Mobile devices generally handle backdrop-filter well
-    if (state.mobileMode) {
-        return false;
-    }
-
-    // For desktop, assume good performance if browser supports backdrop-filter
-    return false;
 }
 
 /**

@@ -3,9 +3,32 @@
     {{ partial "navigation.html" . }}
     <div id="contained-containers" class="contained-containers">
         <div class="contained-beans">
-            {{ range (where .Site.RegularPages "Type" "posts").ByDate.Reverse }}
+            {{ $paginator := .Paginate (where .Site.RegularPages "Type" "posts").ByDate.Reverse }}
+            {{ range $index, $page := $paginator.Pages }}
             {{ partial "article-card.html" . }}
             {{ end }}
+            
+            {{/* Pagination indicator and navigation */}}
+            {{ if gt $paginator.TotalPages 1 }}
+                {{ if $paginator.HasNext }}
+                <div class="pagination-container">
+                    <a href="{{ $paginator.Next.URL }}" class="bean pagination-next" aria-label="下一页">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+                            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                        </svg>
+                    </a>
+                </div>
+                {{ end }}
+            {{ end }}
+            
+            {{/* Hidden metadata for JavaScript */}}
+            <div class="pagination-meta" style="display: none;"
+                 data-current-page="{{ $paginator.PageNumber }}"
+                 data-total-pages="{{ $paginator.TotalPages }}"
+                 {{ if $paginator.HasNext }}data-next-url="{{ $paginator.Next.URL }}"{{ end }}
+                 {{ if $paginator.HasPrev }}data-prev-url="{{ $paginator.Prev.URL }}"{{ end }}>
+            </div>
+            
             <div class="bean-space"></div>
         </div>
     </div>

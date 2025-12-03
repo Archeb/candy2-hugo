@@ -9,7 +9,7 @@ theme = 'candy2-hugo'
   cleanDestinationDir = true
 
 [pagination]
-  pagerSize = 100
+  pagerSize = 10
 
 [params]
   author = "mozzie"
