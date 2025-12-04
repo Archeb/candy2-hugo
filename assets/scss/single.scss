@@ -22,8 +22,8 @@
         position: fixed;
         z-index: 2;
         user-select: none;
-        top: 0px;
-        left: 15px;
+        top: 10px;
+        right: 20px;
         font-size: 2em;
         text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
         color: rgba(255, 255, 255, 0.8);
@@ -350,34 +350,13 @@
     }
 
 
-    .article-comment {
-        width: 0px;
-        height: calc(100vh - 380px);
-        overflow: hidden;
-        background-color: #eeeeee;
-        transition: all 0.5s ease-in-out;
-        visibility: hidden;
-
-        .comment-container {
-            min-width: 360px;
-            padding: 0 20px;
-            margin: 0 auto;
-            overflow: scroll;
-            height: calc(100vh - 380px);
-
-            .gt-header-controls-tip {
-                display: none;
-            }
-        }
-    }
-
     &.show-comment {
         .bean-read {
-            margin: 50px 0 50px 0;
+            //margin: 50px 0 50px 0;
         }
 
         .article-comment {
-            margin: 50px 0 50px 40px;
+            //margin: 50px 0 50px 40px;
             animation: article-comment-in 0.5s ease-in-out forwards;
         }
         .bean-tools{
@@ -402,40 +381,12 @@
         }
     }
 
+    @import "./article-comment.scss";
+
     @import "./article-content";
 }
 
-@keyframes article-comment-in {
-    from {
-        width: 0px;
-        transform: scale(0.9);
-        opacity: 0;
-        visibility: hidden;
-    }
 
-    to {
-        width: 400px;
-        opacity: 1;
-        transform: scale(1);
-        visibility: visible;
-    }
-}
-
-@keyframes article-comment-out {
-    from {
-        width: 400px;
-        opacity: 1;
-        transform: scale(1);
-        visibility: visible;
-    }
-
-    to {
-        width: 0px;
-        transform: scale(0.8);
-        opacity: 0;
-        visibility: hidden;
-    }
-}
 
 @media (max-width: 991px) {
     .modal {
@@ -448,7 +399,7 @@
 
         .bean-read {
             width: 100%;
-            margin: 0;
+            margin: 0!important;
             border-radius: 0;
             height: 100%;
             background-color: #e9e8e8;

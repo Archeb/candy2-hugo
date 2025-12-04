@@ -25,6 +25,7 @@
     color: var(--color-text-main);
     padding: 10px 50px 40px;
     word-wrap: break-word;
+    transition: padding-bottom 0.5s ease-in-out;
 
     // --- Paragraphs ---
     p {
