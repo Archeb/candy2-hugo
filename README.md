@@ -16,6 +16,8 @@
 - 💬 **评论系统支持** - 轻松集成 utteranc.es、Gitalk 等评论组件
 - 💎 **原创视觉设计** - 保留了 Candy2 所有美学元素
 
+主题预览：https://mozz.ie/
+
 ## 🚀 快速开始
 
 ### 安装
@@ -304,13 +306,6 @@ hugo server -s exampleSite -D --themesDir=../.. --theme=candy2-hugo
 - 在浏览器控制台查看是否有 JavaScript 错误
 - 确认第三方评论服务的配置信息（如 repo、clientID 等）正确
 
-## 🙏 致谢
-
-- **原始 Candy2 主题**：[Archeb](https://github.com/Archeb) - Vue.js 版本
-- **Hugo**：[GoHugo.io](https://gohugo.io) - 静态网站生成器
-
 ## 📄 许可证
 
 GPL-3.0 - 详见 [LICENSE](LICENSE) 文件。
-
-继承自原始 [Candy2 项目](https://github.com/Archeb/Candy2) 的许可证。
