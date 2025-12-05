@@ -28,10 +28,11 @@
         text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
         color: rgba(255, 255, 255, 0.8);
     }
-    .modal-visible-container{
-        margin:0 auto;
-        display:flex;
-        height:100%;
+
+    .modal-visible-container {
+        margin: 0 auto;
+        display: flex;
+        height: 100%;
     }
 
     /* Bean TOC */
@@ -43,8 +44,8 @@
         max-height: calc(100vh - 200px);
         overflow-y: auto;
         z-index: 10;
-        opacity:1;
-        transition: left 0.5s ease-in-out,opacity 0.5s ease-in-out;
+        opacity: 1;
+        transition: left 0.5s ease-in-out, opacity 0.5s ease-in-out;
         scrollbar-width: none;
         color: #ffffff;
         animation: slideInLeft 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
@@ -98,7 +99,7 @@
                         &.active {
                             color: #66ccff;
                             font-weight: bold;
-                            transform: translateX(-5px);
+                            transform: translateX(-2px);
                         }
                     }
 
@@ -107,14 +108,21 @@
                     }
                 }
             }
+
+            &>ul>li>a {
+                font-weight: bold;
+            }
+
+            ul>li>ul {
+                border-right: 2px solid rgba(176, 176, 176, 0.5);
+                padding-right: 10px !important;
+            }
+
+            ul>li>ul a {
+                font-size: 0.9em !important;
+            }
         }
-        ul>li>ul {
-            border-right:2px solid rgba(176,176,176,0.5);
-            padding-right:10px!important;
-        }
-        ul>li>ul a {
-            font-size:0.9em!important;
-        }
+
     }
 
     /* Bean Tools (Floating Buttons) */
@@ -225,7 +233,7 @@
                 .category-item {
                     display: flex;
                     align-items: center;
-                    background-color: rgba(32,32,32, 0.3);
+                    background-color: rgba(32, 32, 32, 0.3);
                     padding: 4px 5px;
                     border-radius: 5px;
                     margin-right: 8px;
@@ -261,10 +269,11 @@
                 z-index: 11;
                 transition: width 0.1s linear;
             }
-            .small-title{
+
+            .small-title {
                 font-family: var(--font-serif);
-                font-size:1.1em;
-                display:none;
+                font-size: 1.1em;
+                display: none;
             }
 
         }
@@ -366,13 +375,16 @@
             margin: 50px 0 50px 40px;
             animation: article-comment-in 0.5s ease-in-out forwards;
         }
-        .bean-tools{
+
+        .bean-tools {
             left: calc(50% + 220px);
         }
-        .article-toc{
-            #TableOfContents{
-                opacity: 1!important;
+
+        .article-toc {
+            #TableOfContents {
+                opacity: 1 !important;
             }
+
             left: calc(50% - 860px);
         }
     }
@@ -400,13 +412,14 @@
         .modal-close {
             display: block;
         }
-        .modal-visible-container{
-            width:100%;
+
+        .modal-visible-container {
+            width: 100%;
         }
 
         .bean-read {
             width: 100%;
-            margin: 0!important;
+            margin: 0 !important;
             border-radius: 0;
             height: 100%;
             background-color: #e9e8e8;
