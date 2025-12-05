@@ -250,7 +250,7 @@
         display: block;
         max-width: 100%;
         height: auto;
-        margin: 2em auto;
+        margin: 1em auto;
         border-radius: 12px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s;
@@ -261,7 +261,6 @@
         text-align: center;
 
         figcaption {
-            margin-top: 10px;
             font-size: 0.9em;
             color: var(--color-text-light);
             background: rgba(0, 0, 0, 0.03);
