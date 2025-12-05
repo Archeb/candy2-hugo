@@ -11,6 +11,7 @@ const state = {
     scrollThreshold: 0,
     eventHandlersSetup: false,
     activeProgrammaticScrolls: 0,
+    isClosingModal: false, // Flag to prevent reload when closing modal via button
 };
 
 /**
@@ -394,6 +395,25 @@ function handleGlobalClick(e) {
         return;
     }
 
+    // 2.5 Intercept internal links within modal (for single-to-single navigation)
+    const modal = document.querySelector(".modal");
+    if (modal) {
+        const internalLink = e.target.closest("a[href]");
+        if (internalLink && internalLink.href && !internalLink.target) {
+            const url = new URL(internalLink.href, window.location.origin);
+            
+            // Only intercept same-origin, non-anchor links
+            if (url.origin === window.location.origin && !internalLink.getAttribute("href").startsWith("#")) {
+                // Check if link is inside the modal
+                if (modal.contains(internalLink)) {
+                    e.preventDefault();
+                    navigateWithTransition(internalLink.href);
+                    return;
+                }
+            }
+        }
+    }
+
     // 3. Close button - navigate back to home
     const closeBtn = e.target.closest(".modal-close");
     if (closeBtn) {
@@ -529,258 +549,55 @@ function isSinglePage(url) {
  * Navigate to article page with View Transitions and scale-up animation
  */
 async function navigateToArticle(url) {
-    if (!document.startViewTransition) {
-        // Fallback to normal navigation
-        window.location.href = url;
-        return;
-    }
-
-    try {
-        const response = await fetch(url);
-        const html = await response.text();
-        const parser = new DOMParser();
-        const newDoc = parser.parseFromString(html, "text/html");
-
-        // Check page type and handle accordingly
-        if (isListPage(url)) {
-            // For list pages: replace content in #contained-containers
-            await navigateToListPage(url, newDoc);
-        } else if (isSinglePage(url)) {
-            // For single pages: append modal with animation
-            await navigateToSinglePage(url, newDoc);
-        } else {
-            // Default behavior: replace entire body
-            await navigateDefault(url, newDoc);
-        }
-    } catch (error) {
-        console.error("Navigation error:", error);
-        window.location.href = url;
-    }
+    return navigateWithTransition(url);
 }
 
 /**
- * Navigate to list page (tags, categories) - replace content only
+ * Fetch and parse document
  */
-async function navigateToListPage(url, newDoc) {
+async function fetchDocument(url) {
+    const response = await fetch(url);
+    const html = await response.text();
+    const parser = new DOMParser();
+    return parser.parseFromString(html, "text/html");
+}
+
+/**
+ * Helper to replace list content and handle transitions
+ */
+function replaceListContent(newDoc) {
     const newContainer = newDoc.querySelector("#contained-containers");
     const currentContainer = document.querySelector("#contained-containers");
-    const container = document.getElementById("container");
-
-    if (!newContainer || !currentContainer) {
-        return navigateDefault(url, newDoc);
-    }
-
-    // Reset scroll position to threshold
-    if (container) {
-        if (window.innerWidth < 991) {
-            await smoothScrollTo(container, 0, 600, "top");
-        } else {
-            await smoothScrollTo(container, state.scrollThreshold, 600, "left");
-        }
-    }
-
-    // Collapse bean-main to mini state
-    collapseBeanMain();
-
-    // Use View Transition API - it will automatically apply CSS animations
-    const transition = document.startViewTransition(() => {
-        // Simply replace the content - View Transition API handles everything
+    
+    if (newContainer && currentContainer) {
         currentContainer.innerHTML = newContainer.innerHTML;
         document.title = newDoc.title;
-    });
-
-    await transition.finished;
-
-    // Update navigation state
-    updateNavigationState(url);
-
-    // Update URL
-    const historyState = {
-        page: "list",
-        url: url,
-    };
-    history.pushState(historyState, "", url);
+    }
 }
 
 /**
- * Navigate to single page (posts, about) - append modal
+ * Helper to execute scripts in a container
  */
-async function navigateToSinglePage(url, newDoc) {
-    const modalContent = newDoc.querySelector(".modal");
-
-    if (!modalContent) {
-        return navigateDefault(url, newDoc);
-    }
-
-    // Temporarily remove view-transition-name from contained-beans
-    // to prevent it from animating during modal open
-    const containedBeans = document.querySelector(".contained-beans");
-    const originalTransitionName = containedBeans
-        ? containedBeans.style.viewTransitionName
-        : null;
-    if (containedBeans) {
-        containedBeans.style.viewTransitionName = "none";
-    }
-
-    // Create modal element
-    const modal = modalContent.cloneNode(true);
-    modal.style.opacity = "0";
-    modal.style.transition = "opacity 0.4s ease";
-
-    // Get bean-read element and set initial state for pop-in animation
-    const beanRead = modal.querySelector(".bean-read");
-    if (beanRead) {
-        beanRead.style.transform = "scale(0.9)";
-        beanRead.style.opacity = "0";
-        beanRead.style.transition =
-            "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease";
-    }
-
-    const transition = document.startViewTransition(() => {
-        // Append modal to document
-        document.body.appendChild(modal);
-        document.title = newDoc.title;
-
-        // Trigger animation
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                // Fade in modal background
-                modal.style.opacity = "1";
-
-                // Pop in bean-read element
-                if (beanRead) {
-                    beanRead.style.transform = "scale(1)";
-                    beanRead.style.opacity = "1";
-                }
-            });
+function executeScripts(container) {
+    const scripts = container.querySelectorAll('script');
+    scripts.forEach(oldScript => {
+        const newScript = document.createElement('script');
+        Array.from(oldScript.attributes).forEach(attr => {
+            newScript.setAttribute(attr.name, attr.value);
         });
-    });
-
-    await transition.finished;
-
-    // Restore view-transition-name
-    if (containedBeans) {
-        containedBeans.style.viewTransitionName = originalTransitionName || "";
-    }
-
-    // Setup mobile scroll behavior for the new modal
-    setupMobileScrollBehavior();
-    setupTocHighlight();
-    setupProgressBar();
-
-    // Update URL
-    const state = {
-        page: "single",
-        url: url,
-    };
-    history.pushState(state, "", url);
-
-    // Execute scripts in the comment section
-    const commentSection = modal.querySelector('.article-comment');
-    if (commentSection) {
-        const scripts = commentSection.querySelectorAll('script');
-        scripts.forEach(oldScript => {
-            const newScript = document.createElement('script');
-            
-            Array.from(oldScript.attributes).forEach(attr => {
-                newScript.setAttribute(attr.name, attr.value);
-            });
-            
-            if (oldScript.src) {
-                newScript.src = oldScript.src;
-                newScript.async = oldScript.async || false;
-            } else {
-                newScript.textContent = oldScript.textContent;
-            }
-            
-            oldScript.parentNode.replaceChild(newScript, oldScript);
-        });
-    }
-}
-
-/**
- * Default navigation - replace entire body
- */
-async function navigateDefault(url, newDoc) {
-    const newModal = newDoc.querySelector(".bean-read");
-    if (newModal) {
-        newModal.classList.add("modal-opening");
-    }
-
-    const transition = document.startViewTransition(() => {
-        // Replace entire body content
-        document.body.innerHTML = newDoc.body.innerHTML;
-        document.title = newDoc.title;
-    });
-
-    await transition.finished;
-
-    // Update URL
-    const state = {
-        page: "article",
-        url: url,
-    };
-    history.pushState(state, "", url);
-
-    // Setup mobile scroll behavior for the new page
-    setupMobileScrollBehavior();
-    setupTocHighlight();
-    setupProgressBar();
-
-    // Remove opening animation class after animation completes
-    const modal = document.querySelector(".bean-read");
-    if (modal) {
-        modal.scrollTop = 0;
-        setTimeout(() => {
-            modal.classList.remove("modal-opening");
-        }, 500);
-    }
-}
-
-/**
- * Close article modal with slide-up fade-out animation
- */
-async function closeArticleModal() {
-    const targetModal = document.querySelector(".modal");
-
-    // Add closing animation
-    targetModal.style.transition = "opacity 0.4s ease";
-    targetModal.style.opacity = "0";
-
-    var modalVisibleContainer = targetModal.querySelector(".modal-visible-container");
-
-    if (modalVisibleContainer) modalVisibleContainer.classList.add("modal-closing");
-
-    // Wait for animation to complete
-    await new Promise((resolve) => setTimeout(resolve, 400));
-
-    targetModal.remove();
-
-    // Check if this is an appended modal (single page mode)
-    if (history.state && history.state.page === "single") {
-        // Go back in history if applicable
-        if (
-            history.state &&
-            (history.state.page === "single" || history.state.page === "article")
-        ) {
-            history.back();
+        
+        if (oldScript.src) {
+            newScript.src = oldScript.src;
+            newScript.async = oldScript.async || false;
+        } else {
+            newScript.textContent = oldScript.textContent;
         }
-
-        return;
-    }
-    // For default modal pages (bean-read), use original logic
-    history.pushState({ page: "home" }, "", "/");
+        oldScript.parentNode.replaceChild(newScript, oldScript);
+    });
 }
 
 /**
- * Handle browser back/forward for modal navigation
- */
-function handleModalPopState(event) {
-    // Handle popstate events
-}
-
-/**
- * Navigate with View Transitions API
+ * Main Navigation Function (Entry Point for Clicks)
  */
 async function navigateWithTransition(url) {
     if (!document.startViewTransition) {
@@ -789,53 +606,233 @@ async function navigateWithTransition(url) {
     }
 
     try {
-        const response = await fetch(url);
-        const html = await response.text();
-        const parser = new DOMParser();
-        const newDoc = parser.parseFromString(html, "text/html");
-
-        // Check page type and handle accordingly
-        if (
-            isListPage(url) ||
-            url === window.location.origin + "/" ||
-            url === "/"
-        ) {
-            // List pages (categories, tags, home): replace content
-            await navigateToListPage(url, newDoc);
-            return;
+        // Normalize URL checking
+        const listPage = isListPage(url) || url === window.location.origin + "/" || url.endsWith("/") && !isSinglePage(url);
+        
+        if (listPage) {
+            await loadListPage(url);
         } else if (isSinglePage(url)) {
-            // Single pages (posts, about, etc): open as modal
-            await navigateToSinglePage(url, newDoc);
-            return;
+            await loadSinglePage(url);
+        } else {
+            window.location.href = url;
         }
-
-        // Default fallback: replace container content
-        const transition = document.startViewTransition(() => {
-            // Replace main content
-            const newContent = newDoc.querySelector("#container");
-            const oldContent = document.querySelector("#container");
-
-            if (newContent && oldContent) {
-                oldContent.innerHTML = newContent.innerHTML;
-
-                // Re-initialize after content change
-                setupBeanMainScroll();
-            }
-
-            // Update title
-            document.title = newDoc.title;
-        });
-
-        await transition.finished;
-
-        // Update URL
-        history.pushState({}, "", url);
-
-        // Re-setup event listeners on new content
-        setupBeanMainScroll();
     } catch (error) {
         console.error("Navigation error:", error);
         window.location.href = url;
+    }
+}
+
+/**
+ * Load List Page Logic (Home, Tags, Categories)
+ * @param {string} url 
+ * @param {Document} doc - Optional pre-fetched doc
+ * @param {boolean} updateHistory - Whether to push state (false for popstate)
+ */
+async function loadListPage(url, doc = null, updateHistory = true) {
+    const container = document.getElementById("container");
+    const modal = document.querySelector(".modal");
+
+    // Collapse bean-main to mini state
+    collapseBeanMain();
+
+    if (modal) {
+        // Transition: Single -> List (Closing Modal)
+        // The underlying list content is still in DOM, just remove the modal
+        const transition = document.startViewTransition(() => {
+            modal.remove();
+            // Only replace content if doc is provided (e.g., navigating to a different list)
+            if (doc) {
+                replaceListContent(doc);
+            }
+        });
+        await transition.finished;
+    } else {
+        // Transition: List -> List (Pagination or category switch)
+        // First scroll to the starting position
+        if (container) {
+            if (window.innerWidth < 991) {
+                await smoothScrollTo(container, 0, 600, "top");
+            } else {
+                await smoothScrollTo(container, state.scrollThreshold, 600, "left");
+            }
+        }
+        
+        // Then fetch and replace content
+        if (!doc) doc = await fetchDocument(url);
+        
+        const transition = document.startViewTransition(() => {
+            replaceListContent(doc);
+        });
+        await transition.finished;
+    }
+
+    if (updateHistory) {
+        history.pushState({ page: "list", url: url }, "", url);
+    }
+    
+    updateNavigationState(url);
+}
+
+/**
+ * Load Single Page Logic (Article, About)
+ * @param {string} url 
+ * @param {Document} doc - Optional pre-fetched doc
+ * @param {boolean} updateHistory - Whether to push state (false for popstate)
+ */
+async function loadSinglePage(url, doc = null, updateHistory = true) {
+    if (!doc) doc = await fetchDocument(url);
+
+    const newModalContent = doc.querySelector(".modal");
+    if (!newModalContent) {
+        // Fallback
+        window.location.href = url;
+        return;
+    }
+
+    const currentModal = document.querySelector(".modal");
+    
+    // Temporarily remove view-transition-name from contained-beans
+    // to prevent it from animating during modal open
+    const containedBeans = document.querySelector(".contained-beans");
+    const originalTransitionName = containedBeans ? containedBeans.style.viewTransitionName : null;
+    if (containedBeans) {
+        containedBeans.style.viewTransitionName = "none";
+    }
+
+    if (currentModal) {
+        // Transition: Single -> Single (Replace Modal content)
+        const transition = document.startViewTransition(() => {
+            currentModal.replaceWith(newModalContent);
+            document.title = doc.title;
+        });
+        await transition.finished;
+        
+        // For single->single, use replaceState so closing modal returns to list, not previous article
+        if (updateHistory) {
+            history.replaceState({ page: "single", url: url }, "", url);
+        }
+    } else {
+        // Transition: List -> Single (Open Modal)
+        
+        // Prepare initial animation state
+        const beanRead = newModalContent.querySelector(".bean-read");
+        if (beanRead) {
+            beanRead.style.transform = "scale(0.9)";
+            beanRead.style.opacity = "0";
+            // Set transition explicitly for the javascript-triggered animation
+            beanRead.style.transition = "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease";
+        }
+        newModalContent.style.opacity = "0";
+        newModalContent.style.transition = "opacity 0.4s ease";
+
+        const transition = document.startViewTransition(() => {
+            document.body.appendChild(newModalContent);
+            document.title = doc.title;
+            
+            // Trigger animation frame loop to start opacity/scale transition
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    newModalContent.style.opacity = "1";
+                    if (beanRead) {
+                        beanRead.style.transform = "scale(1)";
+                        beanRead.style.opacity = "1";
+                    }
+                });
+            });
+        });
+        await transition.finished;
+        
+        // For list->single, use pushState
+        if (updateHistory) {
+            history.pushState({ page: "single", url: url }, "", url);
+        }
+    }
+
+    // Restore view-transition-name
+    if (containedBeans) {
+        containedBeans.style.viewTransitionName = originalTransitionName || "";
+    }
+
+    // Initialize New Page
+    setupMobileScrollBehavior();
+    setupTocHighlight();
+    setupProgressBar();
+    
+    // Execute scripts (comments, etc)
+    const commentSection = newModalContent.querySelector('.article-comment');
+    if (commentSection) {
+        executeScripts(commentSection);
+    }
+}
+
+/**
+ * Close article modal with animation and history update
+ */
+async function closeArticleModal() {
+    const targetModal = document.querySelector(".modal");
+    if (!targetModal) return;
+
+    // Set flag to tell popstate handler not to reload
+    state.isClosingModal = true;
+
+    // Manual Animation Out (because we want strict control before history change)
+    targetModal.style.transition = "opacity 0.4s ease";
+    targetModal.style.opacity = "0";
+    const modalVisibleContainer = targetModal.querySelector(".modal-visible-container");
+    if (modalVisibleContainer) modalVisibleContainer.classList.add("modal-closing");
+
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    
+    targetModal.remove();
+
+    // Go back in history - popstate will fire but isClosingModal flag prevents reload
+    history.back();
+}
+
+/**
+ * Handle browser back/forward for modal navigation (Popstate)
+ */
+async function handleModalPopState(event) {
+    const url = window.location.href;
+    const currentModal = document.querySelector(".modal");
+    
+    // Check if this popstate was triggered by closeArticleModal
+    if (state.isClosingModal) {
+        state.isClosingModal = false;
+        // Modal already removed, underlying list content is in DOM
+        // Just update navigation state and title
+        updateNavigationState(url);
+        // Restore title from the meta or a stored value if needed
+        // For now, the title should already be correct since we only changed it when opening modal
+        return;
+    }
+    
+    if (isSinglePage(url)) {
+        // Target is a single page
+        if (currentModal) {
+            // Single -> Single (forward/back between articles)
+            await loadSinglePage(url, null, false);
+        } else {
+            // List -> Single (forward to article)
+            await loadSinglePage(url, null, false);
+        }
+    } else {
+        // Target is a list page
+        if (currentModal) {
+            // Single -> List (back from article via browser button)
+            // The underlying list content should still be in DOM, just remove modal
+            currentModal.style.transition = "opacity 0.3s ease";
+            currentModal.style.opacity = "0";
+            const modalVisibleContainer = currentModal.querySelector(".modal-visible-container");
+            if (modalVisibleContainer) modalVisibleContainer.classList.add("modal-closing");
+            await new Promise((resolve) => setTimeout(resolve, 300));
+            currentModal.remove();
+            
+            updateNavigationState(url);
+        } else {
+            // List -> List (pagination back/forward)
+            await loadListPage(url, null, false);
+        }
     }
 }
 
