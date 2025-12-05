@@ -108,6 +108,13 @@
                 }
             }
         }
+        ul>li>ul {
+            border-right:2px solid rgba(176,176,176,0.5);
+            padding-right:10px!important;
+        }
+        ul>li>ul a {
+            font-size:0.9em!important;
+        }
     }
 
     /* Bean Tools (Floating Buttons) */
