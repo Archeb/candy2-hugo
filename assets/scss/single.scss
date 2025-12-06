@@ -98,7 +98,7 @@
                         /* 高亮状态 */
                         &.active {
                             color: #66ccff;
-                            font-weight: bold;
+                            font-weight: 500;
                             transform: translateX(-2px);
                         }
                     }
@@ -110,7 +110,7 @@
             }
 
             &>ul>li>a {
-                font-weight: bold;
+                font-weight: 500;
             }
 
             ul>li>ul {
@@ -120,6 +120,7 @@
 
             ul>li>ul a {
                 font-size: 0.9em !important;
+                font-weight: 300;
             }
         }
 
