@@ -14,6 +14,11 @@ const state = {
     isClosingModal: false, // Flag to prevent reload when closing modal via button
 };
 
+// Prefetching state
+const prefetchCache = new Map();
+let prefetchTimer = null;
+const PREFETCH_DELAY = 65; // ms
+
 /**
  * Update navigation link-item-selected state based on current URL
  */
@@ -58,7 +63,7 @@ function init() {
     setupMobileScrollBehavior();
     setupTocHighlight();
     setupProgressBar();
-    setupPagination(); // Setup automatic pagination
+    setupHoverPreload();
 
     // Initial state
     checkMobileMode();
@@ -553,13 +558,115 @@ async function navigateToArticle(url) {
 }
 
 /**
- * Fetch and parse document
+ * Fetch and parse document (with caching)
  */
 async function fetchDocument(url) {
-    const response = await fetch(url);
-    const html = await response.text();
-    const parser = new DOMParser();
-    return parser.parseFromString(html, "text/html");
+    return prefetch(url);
+}
+
+/**
+ * Prefetch a URL and cache the promise
+ */
+function prefetch(url) {
+    if (prefetchCache.has(url)) {
+        return prefetchCache.get(url);
+    }
+
+    const promise = (async () => {
+        try {
+            const response = await fetch(url, { priority: 'low' }); // Use low priority for prefetch
+            if (!response.ok) throw new Error('Network response was not ok');
+            const html = await response.text();
+            const parser = new DOMParser();
+            return parser.parseFromString(html, "text/html");
+        } catch (error) {
+            console.error("Prefetch error:", error);
+            prefetchCache.delete(url); // Remove failed cache
+            throw error;
+        }
+    })();
+
+    prefetchCache.set(url, promise);
+    return promise;
+}
+
+/**
+ * Setup hover preloading behavior
+ */
+function setupHoverPreload() {
+    document.addEventListener('mouseover', handleGlobalMouseOver);
+    document.addEventListener('mouseout', handleGlobalMouseOut);
+}
+
+/**
+ * Handle mouse over for preloading
+ */
+function handleGlobalMouseOver(e) {
+    const link = getNavigableLink(e.target);
+    if (!link) return;
+
+    // Optimization: if we are already fetching this url, ignore
+    if (prefetchCache.has(link.href)) return;
+
+    // Clear any existing timer
+    if (prefetchTimer) clearTimeout(prefetchTimer);
+
+    prefetchTimer = setTimeout(() => {
+        prefetch(link.href);
+    }, PREFETCH_DELAY);
+}
+
+/**
+ * Handle mouse out for canceling preload timer
+ */
+function handleGlobalMouseOut(e) {
+    const link = getNavigableLink(e.target);
+    if (!link) return;
+
+    // If we moved into a child of the same link, don't cancel
+    if (e.relatedTarget && link.contains(e.relatedTarget)) {
+        return;
+    }
+
+    if (prefetchTimer) {
+        clearTimeout(prefetchTimer);
+        prefetchTimer = null;
+    }
+}
+
+/**
+ * Helper to identify navigable links (mirrors logic in handleGlobalClick)
+ */
+function getNavigableLink(target) {
+    // 1. Article links
+    const articleLink = target.closest(".bean-article");
+    if (articleLink && articleLink.href) return articleLink;
+
+    // 2. Navigation links
+    const navLink = target.closest("a.link-item");
+    if (navLink && navLink.href && !navLink.target) {
+        const url = new URL(navLink.href);
+        if (url.pathname === window.location.pathname) return null;
+        if (url.origin === window.location.origin && !navLink.href.includes("#")) return navLink;
+    }
+
+    // 3. Pagination
+    const paginationNext = target.closest(".pagination-next");
+    if (paginationNext && paginationNext.href && !paginationNext.target) return paginationNext;
+
+    // 4. Internal links in modal
+    const modal = document.querySelector(".modal");
+    if (modal) {
+        const internalLink = target.closest("a[href]");
+        if (internalLink && internalLink.href && !internalLink.target) {
+             const url = new URL(internalLink.href, window.location.origin);
+             if (url.origin === window.location.origin && !internalLink.getAttribute("href").startsWith("#")) {
+                 if (modal.contains(internalLink)) return internalLink;
+             }
+        }
+    }
+
+    return null;
 }
 
 /**
