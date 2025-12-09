@@ -55,8 +55,9 @@
         .category-item {
             display: flex;
             align-items: center;
-            color: initial;
-            background-color: rgba(255, 255, 255, 0.8);
+            color: var(--article-tool-text);
+            background-color: var(--article-tool-bg);
+            border: 1px solid var(--bean-border);
             padding: 2px 5px;
             height: 19px;
             border-radius: 5px;

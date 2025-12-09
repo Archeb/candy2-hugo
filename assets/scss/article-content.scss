@@ -4,25 +4,12 @@
  */
 
 .article-content {
-    // --- Theme Variables ---
-    
-
-    --color-accent: #8172ef;
-    --color-text-main: #333333;
-    --color-text-light: #666666;
-
-    // Glass Effects
-    --glass-bg-light: rgba(255, 255, 255, 0.4);
-    --glass-bg-dark: rgba(40, 44, 52, 0.85);
-    --glass-border: 1px solid rgba(255, 255, 255, 0.3);
-    --glass-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
-    --glass-blur: blur(10px);
-
     // --- Base Layout & Text ---
+    // Uses CSS variables from style.scss for theme support
     font-family: var(--font-sans-serif);
     font-size: 1rem;
     line-height: 1.8;
-    color: var(--color-text-main);
+    color: var(--article-text);
     padding: 10px 50px 40px;
     word-wrap: break-word;
     transition: padding-bottom 0.5s ease-in-out;
@@ -40,7 +27,7 @@
     h4,
     h5,
     h6 {
-        color: #333;
+        color: var(--article-text);
         margin-top: 2em;
         margin-bottom: 1em;
         line-height: 1.4;
@@ -59,12 +46,12 @@
 
     h2 {
             font-size: 1.5em;
-            background: linear-gradient(to right, rgba(129, 114, 239, .1), rgba(255,255,255,0.5));
+            background: linear-gradient(to right, rgba(129, 114, 239, .1), var(--glass-bg-light));
             padding: 8px 15px;
             border-top-right-radius: 10px;
             border-bottom-right-radius: 10px;
             box-shadow: var(--glass-shadow);
-            backdrop-filter: var(--glass-blur);
+            backdrop-filter: blur(10px);
             width: fit-content;
             margin-inline-start: -50px;
             padding-inline-start: 40px;
@@ -101,7 +88,8 @@
     h5 {
         font-size: 1em;
         font-weight: bold;
-        color: var(--color-text-light);
+        color: var(--article-text);
+        opacity: 0.8;
     }
 
     // --- Links ---
@@ -144,13 +132,14 @@
     blockquote {
         margin: 2em 0;
         padding: 20px 50px;
-        background-color: #fff;
+        background-color: var(--glass-bg-light);
         border-radius: 20px;
         border-left: 5px solid var(--color-accent);
         box-shadow: var(--glass-shadow);
-        color: var(--color-text-main);
+        color: var(--article-text);
         position: relative;
         transition: transform 0.3s, box-shadow 0.3s;
+        backdrop-filter: blur(10px);
 
         &::before {
             content: "❝";
@@ -179,18 +168,18 @@
     // --- Code Blocks (Dark Glass) ---
     pre {
         background-color: var(--glass-bg-dark);
-        backdrop-filter: var(--glass-blur);
+        backdrop-filter: blur(10px);
         color: #abb2bf;
         padding: 40px 20px 20px; // Top padding for Mac buttons
         border-radius: 20px;
         margin: 2em 0;
         overflow-x: auto;
-        box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+        box-shadow: var(--glass-shadow);
         position: relative;
         font-family: var(--font-mono);
         font-size: 0.9em;
         line-height: 1.6;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--glass-border);
 
         // Mac Window Controls
         &::before {
@@ -260,7 +249,7 @@
         figcaption {
             font-size: 0.9em;
             color: var(--color-text-light);
-            background: rgba(0, 0, 0, 0.03);
+            background: var(--glass-bg-light);
             display: inline-block;
             padding: 4px 12px;
             border-radius: 20px;
@@ -276,8 +265,8 @@
         border-radius: 15px;
         overflow: hidden;
         box-shadow: var(--glass-shadow);
-        background-color: rgba(255, 255, 255, 0.5);
-        backdrop-filter: var(--glass-blur);
+        background-color: var(--glass-bg-light);
+        backdrop-filter: blur(10px);
 
         thead {
             background-color: rgba(129, 114, 239, 0.8);
@@ -296,7 +285,7 @@
                 transition: background-color 0.3s;
 
                 &:nth-child(even) {
-                    background-color: rgba(255, 255, 255, 0.3);
+                    background-color: var(--glass-bg-light);
                 }
 
                 &:hover {
@@ -305,8 +294,8 @@
 
                 td {
                     padding: 12px 15px;
-                    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-                    color: var(--color-text-main);
+                    border-bottom: 1px solid var(--glass-border);
+                    color: var(--article-text);
                 }
 
                 &:last-child td {
@@ -327,12 +316,12 @@
     // --- Details / Summary ---
     details {
         background-color: var(--glass-bg-light);
-        backdrop-filter: var(--glass-blur);
+        backdrop-filter: blur(10px);
         border-radius: 15px;
         padding: 15px;
         margin: 1.5em 0;
         box-shadow: var(--glass-shadow);
-        border: 1px solid rgba(255, 255, 255, 0.5);
+        border: 1px solid var(--glass-border);
 
         summary {
             font-weight: bold;
@@ -347,18 +336,18 @@
 
         &[open] summary {
             margin-bottom: 10px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--glass-border);
             padding-bottom: 10px;
         }
     }
 
     // --- Keyboard Input ---
     kbd {
-        background: linear-gradient(180deg, #f8f8f8, #e8e8e8);
-        border: 1px solid #dcdcdc;
+        background: var(--glass-bg-light);
+        border: 1px solid var(--glass-border);
         border-radius: 6px;
-        box-shadow: 0 2px 0 #c8c8c8, 0 4px 5px rgba(0, 0, 0, 0.1);
-        color: #333;
+        box-shadow: var(--glass-shadow);
+        color: var(--article-text);
         display: inline-block;
         font-size: 0.85em;
         font-weight: 600;
@@ -389,17 +378,17 @@
     .kg-bookmark-card {
         width: 100%;
         background-color: var(--glass-bg-light);
-        backdrop-filter: var(--glass-blur);
+        backdrop-filter: blur(10px);
         border-radius: 20px;
         box-shadow: var(--glass-shadow);
         margin: 2em 0;
         overflow: hidden;
         transition: transform 0.3s, box-shadow 0.3s;
-        border: 1px solid rgba(255, 255, 255, 0.4);
+        border: 1px solid var(--glass-border);
 
         &:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
 
         a {

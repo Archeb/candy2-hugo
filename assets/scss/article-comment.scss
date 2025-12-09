@@ -2,7 +2,7 @@
     width: 0px;
     height: calc(100vh - 380px);
     overflow: hidden;
-    background-color: #eeeeee;
+    background-color: var(--article-bg);
     transition: all 0.5s ease-in-out;
     visibility: hidden;
 
@@ -22,7 +22,7 @@
         padding: 0;
         white-space: unset;
         border: none;
-        border-bottom: 1px solid #6190e8 !important;
+        border-bottom: 1px solid var(--color-accent) !important;
     }
 
     .OwO-open {
@@ -30,12 +30,12 @@
     }
 
     .OwO-logo {
-        border: 1px solid #6190e8 !important;
+        border: 1px solid var(--color-accent) !important;
         border-bottom: none !important;
         padding: 0 !important;
         line-height: unset !important;
         height: auto !important;
-        color: #6190e8 !important;
+        color: var(--color-accent) !important;
         font-size: 0.75em !important;
         width: 77px;
 
@@ -49,13 +49,14 @@
         margin-left: -338px;
         margin-top: 9px;
         border-top-right-radius: 0;
-        border: 1px solid #6190e8;
+        border: 1px solid var(--color-accent);
+        background-color: var(--glass-bg-light);
     }
 
     .OwO-items {
         overflow-x: hidden;
         text-align: right !important;
-        color: #6c6c6c;
+        color: var(--article-text);
 
         &::-webkit-scrollbar {
             display: block;
@@ -82,13 +83,13 @@
         resize: none !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
-        border: none !important;
+        border: 1px solid var(--glass-border) !important;
         -webkit-appearance: none !important;
         padding: 15px 20px !important;
-        box-shadow: 0 2px 5px rgba(32, 32, 32, 0.02) !important;
+        box-shadow: var(--glass-shadow) !important;
         font-size: 13px !important;
-        background-color: white !important;
-        color: #6c6c6c !important;
+        background-color: var(--glass-bg-light) !important;
+        color: var(--article-text) !important;
         border-radius: 20px !important;
         font-family: sans-serif !important;
         background-size: 100px !important;
@@ -96,19 +97,21 @@
         background-image: url(../assets/img/kongou.png) !important;
         background-repeat: no-repeat !important;
         background-position: right bottom !important;
+        backdrop-filter: blur(10px);
 
         &:focus,
         &:hover {
-            box-shadow: 0 3px 5px rgba(32, 32, 32, 0.1) !important;
+            box-shadow: 0 3px 5px rgba(32, 32, 32, 0.15) !important;
         }
     }
 
     .gt-header-preview {
-        background-color: white;
+        background-color: var(--glass-bg-light);
         border-radius: 20px !important;
         transition: all 0.5s;
-        box-shadow: 0 2px 5px rgba(32, 32, 32, 0.1) !important;
-        border: none;
+        box-shadow: var(--glass-shadow) !important;
+        border: 1px solid var(--glass-border);
+        color: var(--article-text);
     }
 
     .gt-avatar img {
@@ -121,13 +124,16 @@
     }
 
     .gt-container .gt-comment-content {
-        background-color: white;
+        background-color: var(--glass-bg-light);
         border-radius: 20px !important;
         transition: all 0.5s;
-        box-shadow: 0 2px 5px rgba(32, 32, 32, 0.02) !important;
+        box-shadow: var(--glass-shadow) !important;
+        border: 1px solid var(--glass-border);
+        color: var(--article-text);
+        backdrop-filter: blur(10px);
 
         &:hover {
-            box-shadow: 0 3px 5px rgba(32, 32, 32, 0.1) !important;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15) !important;
         }
     }
 
@@ -145,6 +151,61 @@
     .gt-btn {
         transition: all 0.3s;
         border-radius: 15px;
+        background-color: var(--color-accent) !important;
+        border-color: var(--color-accent) !important;
+        color:#ffffff;
+    }
+
+    // Gitalk additional theme support
+    .gt-container {
+        color: var(--article-text);
+
+        .gt-header-user {
+            color: var(--article-text);
+        }
+
+        .gt-comment-username {
+            color: var(--color-accent);
+        }
+
+        .gt-comment-date {
+            color: var(--color-text-muted);
+        }
+
+        .gt-comment-body {
+            color: var(--article-text) !important;
+        }
+
+        .gt-link {
+            color: var(--color-accent);
+            border-bottom-color: var(--color-accent);
+        }
+
+        .gt-popup {
+            background-color: var(--glass-bg-light);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .gt-action {
+            color: var(--color-text-muted);
+
+            &:hover {
+                color: var(--color-accent);
+            }
+        }
+
+        .gt-svg svg {
+            fill: var(--color-text-muted);
+        }
+
+        .gt-ico-tip {
+            color: var(--color-text-muted);
+        }
+
+        .gt-counts {
+            color: var(--article-text);
+        }
     }
 }
 
@@ -216,7 +277,7 @@
         }
 
         #btn-comment {
-            background-color: #40bfff;
+            background-color: var(--color-accent);
             color: #ffffff;
             width:47px;
             height:47px;

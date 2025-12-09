@@ -55,7 +55,71 @@ if (document.readyState === "loading") {
     init();
 }
 
+// ===== Theme Management =====
+const THEME_KEY = 'candy2-theme';
+const THEMES = ['auto', 'light', 'dark'];
+
+/**
+ * Initialize theme from localStorage or default to auto
+ */
+function initTheme() {
+    const savedTheme = localStorage.getItem(THEME_KEY);
+    if (savedTheme && THEMES.includes(savedTheme)) {
+        setTheme(savedTheme);
+    } else {
+        // Default to auto (no data-theme attribute)
+        setTheme('auto');
+    }
+    
+    // Listen for system preference changes (for auto mode)
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            // Only react to system changes if theme is set to auto
+            const currentTheme = localStorage.getItem(THEME_KEY);
+            if (!currentTheme || currentTheme === 'auto') {
+                // Force re-apply auto mode to update CSS variables
+                setTheme('auto');
+            }
+        });
+    }
+    
+    // Setup theme toggle button
+    const themeToggle = document.querySelector('.theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+}
+
+/**
+ * Set the theme mode
+ * @param {string} mode - 'auto', 'light', or 'dark'
+ */
+function setTheme(mode) {
+    const root = document.documentElement;
+    
+    if (mode === 'auto') {
+        root.removeAttribute('data-theme');
+    } else {
+        root.setAttribute('data-theme', mode);
+    }
+    
+    localStorage.setItem(THEME_KEY, mode);
+}
+
+/**
+ * Toggle theme: auto -> light -> dark -> auto
+ */
+function toggleTheme() {
+    const currentTheme = localStorage.getItem(THEME_KEY) || 'auto';
+    const currentIndex = THEMES.indexOf(currentTheme);
+    const nextIndex = (currentIndex + 1) % THEMES.length;
+    setTheme(THEMES[nextIndex]);
+}
+
 function init() {
+    // Initialize theme first to prevent flash
+    initTheme();
+    
     setupBeanMainScroll();
     setupArticleModal();
     setupResponsive();

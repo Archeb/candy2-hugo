@@ -141,7 +141,7 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: var(--article-tool-bg);
             backdrop-filter: blur(20px);
             display: flex;
             align-items: center;
@@ -149,9 +149,10 @@
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: #555;
+            color: var(--article-tool-text);
             opacity: 0;
             animation: slideInRight 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            border: 1px solid var(--glass-border);
 
             &:nth-child(1) {
                 animation-delay: 0.1s;
@@ -166,16 +167,14 @@
             }
 
             svg {
-                width: 22px;
-                height: 22px;
+                width: 20px;
+                height: 20px;
                 fill: currentColor;
                 transition: transform 0.3s;
             }
 
             &:hover {
                 transform: scale(1.15);
-                color: #000;
-                background-color: rgba(255, 255, 255, 0.95);
                 box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 
                 svg {
@@ -189,14 +188,14 @@
         }
     }
 
-    .bean-read {
-        background-color: #f6f6f6;
-        margin: 50px 0;
-        width: 800px;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        height: calc(100vh - 100px);
-        transition: all 0.5s ease-in-out;
+    	.bean-read {
+		background-color: var(--article-bg);
+		margin: 50px 0;
+		width: 800px;
+		overflow-y: scroll;
+		overflow-x: hidden;
+		height: calc(100vh - 100px);
+		transition: all 0.5s ease-in-out;
 
         transition-timing-function: cubic-bezier(0.68, 0, 0.33, 1) !important;
         scrollbar-width: none;
@@ -289,16 +288,16 @@
             padding: 8px 20px 8px 8px;
             z-index: 10;
             border-radius: 50px;
-            background-color: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(30px);
-            color: #363636;
-            width: 100%;
+            background-color: var(--article-banner-bg);
+            border: solid 1px var(--article-banner-border);
+			backdrop-filter: blur(30px);
+			color: var(--article-banner-text);
+			width: 100%;
             font-family: sans-serif;
 
             .banner-author {
                 display: flex;
                 align-items: center;
-                font-size: 14px;
 
                 span {
                     font-weight: bold;
@@ -327,9 +326,9 @@
                 }
             }
 
-            .banner-tools {
-                color: #7e7e7e;
-                position: relative;
+            			.banner-tools {
+				color: var(--color-text-muted);
+				position: relative;
 
                 .reading-time {
                     display: inline;
@@ -353,7 +352,7 @@
             svg {
                 width: 30px;
                 height: 30px;
-                color: #666666;
+                color: var(--color-text-light);
             }
 
             &:hover {
@@ -418,12 +417,12 @@
             width: 100%;
         }
 
-        .bean-read {
-            width: 100%;
-            margin: 0 !important;
-            border-radius: 0;
-            height: 100%;
-            background-color: #e9e8e8;
+        		.bean-read {
+			width: 100%;
+			margin: 0 !important;
+			border-radius: 0;
+			height: 100%;
+			background-color: var(--article-bg);
 
             .article-cover {
                 height: 72vw;
@@ -475,9 +474,9 @@
                         text-align: center;
                         flex-shrink: 0;
                         border-radius: 50%;
-                        background-color: rgba(255, 255, 255, 0.8);
+                        background-color: var(--article-banner-bg);
                         backdrop-filter: blur(30px);
-                        color: #363636;
+                        color: var(--article-banner-text);
                         box-shadow: 5px 5px 10px rgba(32, 32, 32, 0.1);
                     }
                 }

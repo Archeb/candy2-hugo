@@ -1,5 +1,119 @@
 /* Candy2 Hugo Theme Styles - Converted from Vue.js components */
 
+/* ===== Theme Variables ===== */
+:root {
+	/* Light Theme (Default) */
+	--color-bg: #ffffff;
+	--color-text: #333333;
+	--color-text-light: #666666;
+	--color-text-muted: #999999;
+	--color-accent: #8172ef;
+	--color-accent-hover: #6b5dd3;
+	
+	/* Bean/Card backgrounds */
+	--bean-bg: rgba(255, 255, 255, 0.08);
+	--bean-border: rgba(255, 255, 255, 0.15);
+	--bean-text: rgba(255, 255, 255, 0.85);
+	--bean-hover: rgba(255, 255, 255, 0.15);
+	
+	/* Article/Modal backgrounds */
+	--article-bg: #f6f6f6;
+	--article-text: #333333;
+	--article-banner-bg: rgba(255, 255, 255, 0.8);
+	--article-banner-border: rgba(255, 255, 255, 0.15);
+	--article-banner-text: #363636;
+
+	--article-tool-bg: rgba(255, 255, 255, 0.8);
+	--article-tool-text: #333333;
+	
+	/* Glass effects */
+	--glass-bg-light: rgba(255, 255, 255, 0.4);
+	--glass-bg-dark: rgba(40, 44, 52, 0.85);
+	--glass-border: rgba(255, 255, 255, 0.3);
+	--glass-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
+	
+	/* Scrollbar */
+	--scrollbar-thumb: rgba(0, 0, 0, 0.2);
+	--scrollbar-thumb-hover: rgba(0, 0, 0, 0.4);
+	
+	/* Toolbar */
+	--toolbar-bg: rgba(255, 255, 255, 0.08);
+	--toolbar-text: rgba(255, 255, 255, 0.85);
+	--toolbar-hover: rgba(129, 114, 239, 0.1);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+	--color-bg: #1a1a2e;
+	--color-text: #e0e0e0;
+	--color-text-light: #b0b0b0;
+	--color-text-muted: #808080;
+	--color-accent: #a594ff;
+	--color-accent-hover: #8b7ae0;
+	
+	--bean-bg: rgba(32, 32, 32, 0.5);
+	--bean-border: rgba(255, 255, 255, 0.1);
+	--bean-text: rgba(255, 255, 255, 0.7);
+	--bean-hover: rgba(254, 254, 254, 0.3);
+	
+	--article-bg: rgba(32, 32, 32, 0.5);
+	--article-text: #e0e0e0;
+	--article-banner-bg: rgba(32,32,32, 0.9);
+	--article-banner-text: #e0e0e0;
+
+	--article-tool-bg: rgba(32, 32, 32, 0.9);
+	--article-tool-text: #e0e0e0;
+	
+	--glass-bg-light: rgba(40, 40, 60, 0.6);
+	--glass-bg-dark: rgba(20, 20, 30, 0.9);
+	--glass-border: rgba(255, 255, 255, 0.1);
+	--glass-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+	
+	--scrollbar-thumb: rgba(255, 255, 255, 0.2);
+	--scrollbar-thumb-hover: rgba(255, 255, 255, 0.4);
+	
+	--toolbar-bg: rgba(32, 32, 32, 0.9);
+	--toolbar-text: #e0e0e0;
+	--toolbar-hover: rgba(165, 148, 255, 0.2);
+}
+
+/* Auto mode - follows system preference when no explicit theme set */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme]) {
+		--color-bg: #1a1a2e;
+		--color-text: #e0e0e0;
+		--color-text-light: #b0b0b0;
+		--color-text-muted: #808080;
+		--color-accent: #a594ff;
+		--color-accent-hover: #8b7ae0;
+		
+		--bean-bg: rgba(32, 32, 32, 0.5);
+		--bean-border: rgba(255, 255, 255, 0.1);
+		--bean-text: rgba(255, 255, 255, 0.7);
+		--bean-hover: rgba(254, 254, 254, 0.3);
+		
+		--article-bg: rgba(32, 32, 32, 0.5);
+		--article-text: #e0e0e0;
+		--article-banner-bg: rgba(32,32,32, 0.9);
+		--article-banner-text: #e0e0e0;
+
+		--article-tool-bg: rgba(32, 32, 32, 0.9);
+		--article-tool-text: #e0e0e0;
+		
+		--glass-bg-light: rgba(40, 40, 60, 0.6);
+		--glass-bg-dark: rgba(20, 20, 30, 0.9);
+		--glass-border: rgba(255, 255, 255, 0.1);
+		--glass-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+		
+		--scrollbar-thumb: rgba(255, 255, 255, 0.2);
+		--scrollbar-thumb-hover: rgba(255, 255, 255, 0.4);
+		
+		--toolbar-bg: rgba(32, 32, 32, 0.9);
+		--toolbar-text: #e0e0e0;
+		--toolbar-hover: rgba(165, 148, 255, 0.2);
+	}
+}
+
 /* Global Styles */
 html {
 	height: 100%;
@@ -25,14 +139,14 @@ body {
 
 a {
 	text-decoration: none;
-	color: #8172ef;
+	color: var(--color-accent);
 }
 
 /* Container Styles */
 .container {
 	display: flex;
 	overflow-x: scroll;
-	color: #333333;
+	color: var(--color-text);
 	height: 100%;
 	align-items: center;
 	overflow-y: hidden;
@@ -65,11 +179,11 @@ a {
 
 /* Bean Base Styles */
 .bean {
-	background-color: rgba(32,32,32, 0.5);
+	background-color: var(--bean-bg);
 	box-shadow: -5px -5px 10px rgba(32, 32, 32, 0.1), 5px 5px 10px rgba(32, 32, 32, 0.1);
 	backdrop-filter: blur(10px);
 	border-radius: 20px;
-	color:rgba(255,255,255, 0.7);
+	color: var(--bean-text);
 	flex-shrink: 0;
 }
 
@@ -143,12 +257,12 @@ a {
 	display: flex;
     align-items: center;
     justify-content: center;
-    color: #333;
+    color: var(--bean-text);
+	border: 1px solid var(--bean-border);
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    transition: all .3s 
-cubic-bezier(.68, 0, .33, 1);
+    transition: all .3s cubic-bezier(.68, 0, .33, 1);
     cursor: pointer;
     text-decoration: none;
     box-shadow: 0 0 5px rgba(32, 32, 32, .1) !important;
@@ -219,6 +333,7 @@ cubic-bezier(.68, 0, .33, 1);
 
 		.banner-content {
 			border-radius: 0px !important;
+			border:none;
 		}
 	}
 	
@@ -250,28 +365,28 @@ cubic-bezier(.68, 0, .33, 1);
 ::-webkit-scrollbar-thumb {
 	border-radius: 12px;
 	border: 5px solid transparent;
-	background-color: rgba(0, 0, 0, 0.2);
+	background-color: var(--scrollbar-thumb);
 	transition: all 0.3s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background-color: rgba(0, 0, 0, 0.4);
+	background-color: var(--scrollbar-thumb-hover);
 }
 
 ::-webkit-scrollbar-thumb:active {
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: var(--scrollbar-thumb-hover);
 }
 
 /* Article Tags */
 .article-tags {
 	padding: 20px 60px 40px;
-	border-top: 1px solid #e0e0e0;
+	border-top: 1px solid var(--glass-border);
 	margin-top: 30px;
 }
 
 .tags-label {
 	font-weight: bold;
-	color: #666666;
+	color: var(--color-text-light);
 	margin-right: 10px;
 }
 
@@ -290,7 +405,7 @@ cubic-bezier(.68, 0, .33, 1);
 .tags-list a {
 	padding: 5px 15px;
 	background-color: rgba(129, 114, 239, 0.1);
-	color: #8172ef;
+	color: var(--color-accent);
 	text-decoration: none;
 	border-radius: 15px;
 	font-size: 0.9em;
@@ -302,6 +417,70 @@ cubic-bezier(.68, 0, .33, 1);
 	background-color: rgba(129, 114, 239, 0.2);
 	transform: translateY(-2px);
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Floating Toolbar ===== */
+.floating-toolbar {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	display: flex;
+	gap: 10px;
+	z-index: 1;
+	animation: toolbarFadeIn 0.5s ease-out;
+}
+
+.floating-toolbar .toolbar-btn {
+	width: 44px;
+	height: 44px;
+	border: none;
+	border-radius: 50%;
+	background-color: var(--toolbar-bg);
+	backdrop-filter: blur(20px);
+	color: var(--toolbar-text);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	border: 1px solid var(--glass-border);
+}
+
+
+.floating-toolbar .toolbar-btn svg {
+	width: 20px;
+	height: 20px;
+	transition: transform 0.3s;
+}
+
+.floating-toolbar .toolbar-btn:hover svg {
+	transform: scale(1.1);
+}
+
+/* Theme toggle button icon states */
+.floating-toolbar .theme-toggle .icon-sun,
+.floating-toolbar .theme-toggle .icon-moon,
+.floating-toolbar .theme-toggle .icon-auto {
+	display: none;
+}
+
+/* Show appropriate icon based on data-theme */
+:root:not([data-theme]) .floating-toolbar .theme-toggle .icon-auto,
+[data-theme="light"] .floating-toolbar .theme-toggle .icon-sun,
+[data-theme="dark"] .floating-toolbar .theme-toggle .icon-moon {
+	display: block;
+}
+
+@keyframes toolbarFadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 /* Animation */
@@ -451,6 +630,11 @@ cubic-bezier(.68, 0, .33, 1);
 		width: 100vw;
 		--mybg: url(/img/bg-mobile.jpg);
 		height: 100%;
+	}
+
+	.floating-toolbar{
+		bottom: 20px;
+    	top: initial;
 	}
 
 	.container {
