@@ -65,10 +65,11 @@ a {
 
 /* Bean Base Styles */
 .bean {
-	background-color: rgba(223, 242, 255, 0.5);
+	background-color: rgba(32,32,32, 0.5);
 	box-shadow: -5px -5px 10px rgba(32, 32, 32, 0.1), 5px 5px 10px rgba(32, 32, 32, 0.1);
 	backdrop-filter: blur(10px);
 	border-radius: 20px;
+	color:rgba(255,255,255, 0.7);
 	flex-shrink: 0;
 }
 
