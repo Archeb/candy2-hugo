@@ -318,6 +318,7 @@ function setupBeanMainScroll() {
  * Setup horizontal wheel scrolling
  * Convert vertical wheel scrolling to horizontal in desktop mode
  * Implements smooth scrolling with inertia for a "Chrome-like" feel
+ * Does NOT interfere with trackpad horizontal scrolling or manual scrollbar dragging
  */
 function setupHorizontalWheel() {
     const container = document.getElementById("container");
@@ -325,10 +326,14 @@ function setupHorizontalWheel() {
 
     // State for smooth scrolling
     let targetScrollLeft = container.scrollLeft;
+    let expectedScrollLeft = container.scrollLeft; // Track where animation should be
     let isAnimating = false;
     let lastScrollLeft = container.scrollLeft;
-    let isWheelScrolling = false;
+    let lastUserInteractionTime = 0;
+    let wheelScrollingTimeout = null;
     const lerpFactor = 0.15; // Controls the "weight" or "smoothness" (0.1 = heavy/smooth, 0.3 = snappy)
+    const USER_INTERACTION_TIMEOUT = 100; // ms to wait after detecting user scroll
+    const JUMP_THRESHOLD = 20; // px - if scroll jumps more than this, it's likely manual
 
     // Animation loop
     function updateScroll() {
@@ -340,43 +345,79 @@ function setupHorizontalWheel() {
             return;
         }
 
+        // Stop if user has manually scrolled recently
+        const timeSinceUserInteraction = performance.now() - lastUserInteractionTime;
+        if (timeSinceUserInteraction < USER_INTERACTION_TIMEOUT) {
+            isAnimating = false;
+            return;
+        }
+
         const current = container.scrollLeft;
         const diff = targetScrollLeft - current;
 
         // Stop if close enough
         if (Math.abs(diff) < 0.5) {
             container.scrollLeft = targetScrollLeft;
+            expectedScrollLeft = targetScrollLeft;
             isAnimating = false;
-            isWheelScrolling = false;
+            clearWheelScrollingFlag();
             return;
         }
 
         // Interpolate
-        container.scrollLeft = current + diff * lerpFactor;
+        const newPosition = current + diff * lerpFactor;
+        container.scrollLeft = newPosition;
+        expectedScrollLeft = newPosition; // Update expected position
         requestAnimationFrame(updateScroll);
     }
 
-    // Listen for manual scroll (e.g., dragging scrollbar)
+    // Clear wheel scrolling flag after a short delay
+    function clearWheelScrollingFlag() {
+        if (wheelScrollingTimeout) {
+            clearTimeout(wheelScrollingTimeout);
+        }
+        wheelScrollingTimeout = setTimeout(() => {
+            // Only clear if we're not actively animating
+            if (!isAnimating) {
+                lastUserInteractionTime = 0;
+            }
+        }, 150);
+    }
+
+    // Listen for manual scroll (e.g., dragging scrollbar or trackpad horizontal scroll)
     container.addEventListener("scroll", function() {
         // Skip if this is a programmatic scroll
         if (state.activeProgrammaticScrolls > 0) {
             lastScrollLeft = container.scrollLeft;
+            expectedScrollLeft = container.scrollLeft;
             return;
         }
 
-        // Skip if this scroll is caused by our wheel animation
-        if (isWheelScrolling) {
-            lastScrollLeft = container.scrollLeft;
-            return;
+        const currentScrollLeft = container.scrollLeft;
+
+        if (isAnimating) {
+            // During animation, check if actual position deviates significantly from expected
+            // This indicates user manually dragged the scrollbar
+            const deviation = Math.abs(currentScrollLeft - expectedScrollLeft);
+            
+            if (deviation > JUMP_THRESHOLD) {
+                // Large deviation - user dragged scrollbar
+                // Stop animation and sync to user's position
+                isAnimating = false;
+                targetScrollLeft = currentScrollLeft;
+                expectedScrollLeft = currentScrollLeft;
+                lastUserInteractionTime = performance.now();
+            }
+            // Small deviations are normal during animation, ignore them
+        } else if (currentScrollLeft !== lastScrollLeft) {
+            // No animation running, but scroll changed - it's definitely user action
+            // This catches trackpad horizontal scroll
+            targetScrollLeft = currentScrollLeft;
+            expectedScrollLeft = currentScrollLeft;
+            lastUserInteractionTime = performance.now();
         }
 
-        // Detect manual scroll: if scrollLeft changed but we didn't cause it
-        if (container.scrollLeft !== lastScrollLeft) {
-            // User manually scrolled, sync target position
-            targetScrollLeft = container.scrollLeft;
-            lastScrollLeft = container.scrollLeft;
-            isAnimating = false;
-        }
+        lastScrollLeft = currentScrollLeft;
     });
 
     container.addEventListener(
@@ -384,15 +425,27 @@ function setupHorizontalWheel() {
         function (e) {
             if (state.mobileMode) return;
 
-            // Only convert vertical scrolling to horizontal on desktop
-            if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-                e.preventDefault();
+            const absDeltaX = Math.abs(e.deltaX);
+            const absDeltaY = Math.abs(e.deltaY);
 
-                isWheelScrolling = true;
+            // Detect trackpad horizontal scrolling:
+            // If deltaX is significant and deltaY is relatively small, it's horizontal scroll
+            // Don't interfere with this - let it pass through naturally
+            if (absDeltaX > 0 && absDeltaY < absDeltaX * 0.5) {
+                // This is likely a horizontal trackpad scroll gesture
+                // Don't prevent default, let browser handle it
+                return;
+            }
+
+            // Only convert vertical scrolling to horizontal if it's clearly vertical
+            // Require deltaY to be dominant (at least 2x deltaX)
+            if (absDeltaY > absDeltaX * 2) {
+                e.preventDefault();
 
                 // If animation was stopped, sync target to current position
                 if (!isAnimating) {
                     targetScrollLeft = container.scrollLeft;
+                    expectedScrollLeft = container.scrollLeft;
                 }
 
                 // Normalize delta
@@ -417,6 +470,9 @@ function setupHorizontalWheel() {
                     isAnimating = true;
                     requestAnimationFrame(updateScroll);
                 }
+
+                // Reset user interaction timer since this is a deliberate wheel action
+                lastUserInteractionTime = 0;
             }
         },
         { passive: false }
