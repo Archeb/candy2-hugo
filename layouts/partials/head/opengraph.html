@@ -2,8 +2,10 @@
 <meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary | plainify | truncate 160 }}{{ else }}{{ .Site.Params.description }}{{ end }}{{ end }}" />
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
 <meta property="og:url" content="{{ .Permalink | safeURL }}" />
-{{- $image := .Params.featuredImage | default .Site.Params.defaultImage | default "/img/cover1.jpg" -}}
+{{- if .Params.featuredImage }}
+{{- $image := .Params.featuredImage -}}
 <meta property="og:image" content="{{ $image | absURL | safeURL }}" />
+{{- end }}
 <meta property="og:site_name" content="{{ .Site.Title }}" />
 
 {{- if .IsPage }}
