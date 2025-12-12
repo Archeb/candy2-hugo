@@ -250,12 +250,11 @@
         bottom: 0;
         width: 100% !important;
         height: 50vh;
+        backdrop-filter: blur(20px) brightness(0.5);
     }
-
-    .comment-container {
-        height: 50vh;
+    .comment-container{
+        height: 50vh!important;
     }
-
     .gt-header-controls {
         display: grid;
         grid: auto-flow / 1fr 1fr 1fr;
@@ -277,8 +276,6 @@
         }
 
         #btn-comment {
-            background-color: var(--color-accent);
-            color: #ffffff;
             width:47px;
             height:47px;
         }

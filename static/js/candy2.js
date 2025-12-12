@@ -128,6 +128,7 @@ function init() {
     setupTocHighlight();
     setupProgressBar();
     setupHoverPreload();
+    setupCommentCountMonitor();
 
     // Initial state
     checkMobileMode();
@@ -989,7 +990,59 @@ async function loadSinglePage(url, doc = null, updateHistory = true) {
     const commentSection = newModalContent.querySelector('.article-comment');
     if (commentSection) {
         executeScripts(commentSection);
+        // Start monitoring for comment count after scripts load
+        setupCommentCountMonitor();
     }
+}
+
+/**
+ * Monitor for comment count and update the button badge
+ * Periodically checks for .gt-counts .gt-link-counts element (Gitalk)
+ * and displays the count on #btn-comment:after pseudo-element
+ */
+let commentCountInterval = null;
+
+function setupCommentCountMonitor() {
+    // Clear any existing interval
+    if (commentCountInterval) {
+        clearInterval(commentCountInterval);
+        commentCountInterval = null;
+    }
+    
+    const btnComment = document.getElementById('btn-comment');
+    if (!btnComment) return;
+    
+    // Check count every 500ms for up to 30 seconds (max 60 checks)
+    let checkCount = 0;
+    const maxChecks = 60;
+    
+    commentCountInterval = setInterval(() => {
+        checkCount++;
+        
+        // Try to find the comment count element (Gitalk uses .gt-counts .gt-link-counts)
+        const countElement = document.querySelector('.gt-counts .gt-link-counts');
+        
+        if (countElement) {
+            const countText = countElement.textContent || countElement.innerText;
+            const count = parseInt(countText, 10);
+            
+            if (!isNaN(count) && count > 0) {
+                // Update the CSS custom property to show the count
+                btnComment.setAttribute('data-comment-count', count);
+                btnComment.classList.add('has-comments');
+                
+                // Stop checking once we have a valid count
+                clearInterval(commentCountInterval);
+                commentCountInterval = null;
+            }
+        }
+        
+        // Stop after max checks
+        if (checkCount >= maxChecks) {
+            clearInterval(commentCountInterval);
+            commentCountInterval = null;
+        }
+    }, 500);
 }
 
 /**

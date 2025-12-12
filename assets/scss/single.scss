@@ -200,6 +200,22 @@
                 transform: scale(0.95);
             }
         }
+        #btn-comment {
+            position: relative;
+            
+            &.has-comments:after {
+                content: attr(data-comment-count);
+                display: block;
+                position: absolute;
+                top: -10px;
+                right: -8px;
+                background-color: var(--article-tool-bg-solid);
+                padding: 2px 6px;
+                border: 1px solid var(--glass-border);
+                border-radius: 10px;
+                font-size: 0.9em;
+            }
+        }
     }
 
     	.bean-read {
@@ -431,7 +447,7 @@
             width: 100%;
         }
 
-        		.bean-read {
+        .bean-read {
 			width: 100%;
 			margin: 0 !important;
 			border-radius: 0;
@@ -480,6 +496,7 @@
                         margin-left: 10px;
                         cursor: pointer;
                         transition: all 0.3s;
+                        border: solid 1px var(--article-banner-border);
                         justify-content: center;
                         width: 47px;
                         align-items: center;
@@ -525,42 +542,6 @@
                 h2 {
                     margin-inline-start: -20px;
                     padding-inline-start: 20px;
-                }
-            }
-
-            .article-comment {
-                padding: 0 20px 20px;
-                margin-bottom: var(--safariBottomMargin);
-
-                .view-item {
-                    font-size: 0.8em;
-                }
-
-                .extra-icon-mail {
-                    transform: translate(22px, 0) !important;
-                }
-
-                .extra-mail {
-                    margin: 0 10px !important;
-                }
-
-                .extra-info input {
-                    min-width: 0;
-                }
-
-                .OwO-logo {
-                    width: 100%;
-                }
-
-                .OwO-body {
-                    margin-left: 0;
-                    margin-top: 9px;
-                    border-top-right-radius: 0;
-                    width: 100% !important;
-                }
-
-                .OwO-items {
-                    text-align: center !important;
                 }
             }
         }
