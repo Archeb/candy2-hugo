@@ -20,7 +20,7 @@
 	--article-bg: #f6f6f6;
 	--article-text: #333333;
 	--article-banner-bg: rgba(255, 255, 255, 0.8);
-	--article-banner-border: rgba(255, 255, 255, 0.15);
+	--article-banner-border: transparent;
 	--article-banner-text: #363636;
 
 	--article-tool-bg: rgba(255, 255, 255, 0.8);
@@ -60,6 +60,7 @@
 	--article-bg: rgba(32, 32, 32, 0.5);
 	--article-text: #e0e0e0;
 	--article-banner-bg: rgba(32,32,32, 0.9);
+	--article-banner-border: rgba(255, 255, 255, 0.15);
 	--article-banner-text: #e0e0e0;
 
 	--article-tool-bg: rgba(32, 32, 32, 0.9);
@@ -97,6 +98,7 @@
 		--article-bg: rgba(32, 32, 32, 0.5);
 		--article-text: #e0e0e0;
 		--article-banner-bg: rgba(32,32,32, 0.9);
+		--article-banner-border: rgba(255, 255, 255, 0.15);
 		--article-banner-text: #e0e0e0;
 
 		--article-tool-bg: rgba(32, 32, 32, 0.9);
@@ -337,6 +339,7 @@ a {
 		.banner-content {
 			border-radius: 0px !important;
 			border:none;
+			border-bottom: solid 1px var(--article-banner-border);
 		}
 	}
 	
