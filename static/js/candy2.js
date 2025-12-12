@@ -909,7 +909,7 @@ async function loadListPage(url, doc = null, updateHistory = true) {
 async function loadSinglePage(url, doc = null, updateHistory = true) {
     if (!doc) doc = await fetchDocument(url);
 
-    const newModalContent = doc.querySelector(".modal");
+    const newModalContent = doc.querySelector(".modal")?.cloneNode(true);
     if (!newModalContent) {
         // Fallback
         window.location.href = url;
