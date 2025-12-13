@@ -895,7 +895,7 @@ async function loadListPage(url, doc = null, updateHistory = true) {
     }
 
     if (updateHistory) {
-        history.pushState({ page: "list", url: url }, "", url);
+        history.pushState({ page: "list", url: url, canGoBack: true }, "", url);
     }
     
     updateNavigationState(url);
@@ -936,8 +936,10 @@ async function loadSinglePage(url, doc = null, updateHistory = true) {
         await transition.finished;
         
         // For single->single, use replaceState so closing modal returns to list, not previous article
+        // Keep the canGoBack flag from the original state
         if (updateHistory) {
-            history.replaceState({ page: "single", url: url }, "", url);
+            const canGoBack = history.state?.canGoBack || false;
+            history.replaceState({ page: "single", url: url, canGoBack: canGoBack }, "", url);
         }
     } else {
         // Transition: List -> Single (Open Modal)
@@ -970,9 +972,10 @@ async function loadSinglePage(url, doc = null, updateHistory = true) {
         });
         await transition.finished;
         
-        // For list->single, use pushState
+        // For list->single, use pushState with canGoBack flag
+        // This indicates there's a valid internal page to go back to
         if (updateHistory) {
-            history.pushState({ page: "single", url: url }, "", url);
+            history.pushState({ page: "single", url: url, canGoBack: true }, "", url);
         }
     }
 
@@ -1052,6 +1055,9 @@ async function closeArticleModal() {
     const targetModal = document.querySelector(".modal");
     if (!targetModal) return;
 
+    // Check if we can safely go back (i.e., user came from an internal page)
+    const canGoBack = history.state?.canGoBack === true;
+
     // Set flag to tell popstate handler not to reload
     state.isClosingModal = true;
 
@@ -1065,8 +1071,15 @@ async function closeArticleModal() {
     
     targetModal.remove();
 
-    // Go back in history - popstate will fire but isClosingModal flag prevents reload
-    history.back();
+    if (canGoBack) {
+        // User came from an internal page, go back in history
+        history.back();
+    } else {
+        // User came from external source (e.g., search engine), navigate to homepage
+        state.isClosingModal = false; // Reset flag since we're not using history.back()
+        await loadListPage("/", null, false);
+        history.pushState({ page: "list", url: "/", canGoBack: false }, "", "/");
+    }
 }
 
 /**
