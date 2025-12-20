@@ -1,20 +1,21 @@
-# Candy2 主题 (Hugo 版本)
+# Candy2 (Hugo)
 
 一个优雅现代的 Hugo 主题，采用磨砂玻璃效果和水平滚动设计。
 
-![Candy2 Hugo 主题](https://i.loli.net/2021/02/20/uzfTSEHPlFOeR4r.png)
+<img width="3840" height="1822" alt="image" src="https://github.com/user-attachments/assets/cae349c6-6523-40ec-9313-3cec3b148545" />
+
+<img width="3840" height="1822" alt="image" src="https://github.com/user-attachments/assets/0df4d44d-a74b-4ea3-9690-0273a5365021" />
+
+
 
 ## ✨ 特性
 
 - 🎨 **毛玻璃设计** - 精美的磨砂玻璃效果，支持背景模糊
-- 📜 **水平滚动** - 桌面端独特的水平卡片式导航
-- 🎭 **模态框文章视图** - 使用 View Transitions API 实现平滑的模态框动画
-- 📱 **完全响应式** - 在移动端和桌面端都有流畅的体验
-- ⚡ **极速加载** - 基于 Hugo v0.152.2+ 的静态站点生成
-- 🎬 **流畅动画** - 缩放、滑入和淡入淡出效果
-- 🔖 **标签和分类支持** - 使用标签和分类组织文章
-- 💬 **评论系统支持** - 轻松集成 utteranc.es、Gitalk 等评论组件
-- 💎 **原创视觉设计** - 保留了 Candy2 所有美学元素
+- 💎 **原创交互** - 独一无二的桌面端独特的水平卡片式导航交互
+- 🌙 **深色模式** - 完全支持自适应的深色模式
+- 📱 **响应式** - 在移动端和桌面端都有流畅的体验
+- 🎬 **流畅动画** - 分类目录、翻页、打开文章都有自然的动画过渡
+- 💬 **评论支持** - 轻松集成 utteranc.es、Gitalk 等评论组件
 
 主题预览：https://mozz.ie/
 
@@ -27,8 +28,8 @@
 # 检查你的 Hugo 版本
 hugo version
 
-# 如果需要，下载 Hugo Extended v0.152.2
-# https://github.com/gohugoio/hugo/releases/tag/v0.152.2
+# 如果没有，下载 Hugo Extended
+# https://github.com/gohugoio/hugo/releases
 ```
 
 2. **将主题添加到你的 Hugo 站点**：
@@ -221,90 +222,6 @@ candy2-hugo/
 ├── README.md               # 本文件
 └── LICENSE                 # GPL-3.0 许可证
 ```
-
-## 🎬 交互特性
-
-### 导航栏滚动行为
-
-左侧导航栏（bean-main）会在你水平滚动时自动从全宽缩小到迷你尺寸，为文章卡片创造更多空间。
-
-### 模态框文章视图
-
-点击文章卡片会在模态框覆盖层中打开文章，具有以下特性：
-- 平滑的缩放动画（0.7 → 1.0）
-- 使用 View Transitions API 实现无缝导航
-- 保留滚动位置
-- 浏览器历史记录集成
-- 按 ESC 键或点击关闭按钮退出
-
-### 文章滑入动画
-
-当你开始滚动时，文章会从右侧滑入并保持可见（不会淡出）。
-
-### 目录和工具按钮
-
-- 左侧显示文章目录（仅桌面端）
-- 右侧悬浮工具按钮：
-  - 返回顶部
-  - 查看评论
-  - 分享文章
-
-## 🌐 浏览器支持
-
-- ✅ **Chrome/Edge 111+** - 完整的 View Transitions API 支持
-- ✅ **Firefox** - View Transitions 优雅降级
-- ✅ **Safari** - View Transitions 优雅降级，背景模糊可能有限制
-- ✅ **移动浏览器** - 完全响应式，垂直滚动
-
-## 🔧 生产环境构建
-
-```bash
-# 生成静态站点
-hugo --minify
-
-# 输出将在 public/ 目录
-```
-
-## 📦 示例站点
-
-主题包含一个 `exampleSite/` 目录，其中包含：
-- 示例配置
-- 演示主题功能的示例文章
-- 正确的内容结构
-
-运行示例站点：
-
-```bash
-# 在主题根目录运行
-hugo server -s exampleSite -D --themesDir=../.. --theme=candy2-hugo
-```
-
-## 🐛 故障排除
-
-### 文章不显示
-
-- 确保头信息中设置了 `draft: false`
-- 检查内容是否在 `content/posts/` 目录
-- 验证 `hugo.toml` 中主题名称正确：`theme = 'candy2-hugo'`
-
-### 样式未加载
-
-- 使用 Hugo Extended 版本（CSS 处理必需）
-- 清除浏览器缓存
-- 检查浏览器控制台是否有错误
-
-### 模态框不工作
-
-- 验证 JavaScript 已启用
-- 检查浏览器是否支持现代 JavaScript 特性
-- View Transitions API 可能在某些浏览器中不可用（已提供降级方案）
-
-### 评论系统不显示
-
-- 确保在 `hugo.toml` 的 `[params]` 部分添加了 `customComments` 参数
-- 检查 `[markup.goldmark.renderer]` 中设置了 `unsafe = true`
-- 在浏览器控制台查看是否有 JavaScript 错误
-- 确认第三方评论服务的配置信息（如 repo、clientID 等）正确
 
 ## 📄 许可证
 
