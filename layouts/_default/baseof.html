@@ -29,12 +29,13 @@
 <body>
     <!-- Floating Toolbar -->
     <div class="floating-toolbar">
-        <button class="toolbar-btn search-btn" aria-label="搜索" title="搜索">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <form class="toolbar-btn search-btn" action="javascript:void(0);" onsubmit="performSiteSearch(this)">
+            <input class="search-input" type="search" enterkeyhint="search" autocomplete="off">
+            <svg onclick="this.parentElement.requestSubmit()" contenteditable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="11" cy="11" r="8"></circle>
                 <path d="m21 21-4.35-4.35"></path>
             </svg>
-        </button>
+        </form>
         <button class="toolbar-btn theme-toggle" aria-label="切换主题" title="切换主题">
             <!-- Auto mode icon (half sun/moon) -->
             <svg class="icon-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">

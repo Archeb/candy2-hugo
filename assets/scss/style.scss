@@ -9,13 +9,13 @@
 	--color-text-muted: #999999;
 	--color-accent: #8172ef;
 	--color-accent-hover: #6b5dd3;
-	
+
 	/* Bean/Card backgrounds */
 	--bean-bg: rgba(255, 255, 255, 0.08);
 	--bean-border: rgba(255, 255, 255, 0.15);
 	--bean-text: rgba(255, 255, 255, 0.85);
 	--bean-hover: rgba(255, 255, 255, 0.15);
-	
+
 	/* Article/Modal backgrounds */
 	--article-bg: #f6f6f6;
 	--article-text: #333333;
@@ -24,19 +24,19 @@
 	--article-banner-text: #363636;
 
 	--article-tool-bg: rgba(255, 255, 255, 0.8);
-	--article-tool-bg-solid: rgb(250,250,250);
+	--article-tool-bg-solid: rgb(250, 250, 250);
 	--article-tool-text: #333333;
-	
+
 	/* Glass effects */
 	--glass-bg-light: rgba(255, 255, 255, 0.4);
 	--glass-bg-dark: rgba(40, 44, 52, 0.85);
 	--glass-border: rgba(255, 255, 255, 0.3);
 	--glass-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
-	
+
 	/* Scrollbar */
 	--scrollbar-thumb: rgba(0, 0, 0, 0.2);
 	--scrollbar-thumb-hover: rgba(0, 0, 0, 0.4);
-	
+
 	/* Toolbar */
 	--toolbar-bg: rgba(255, 255, 255, 0.08);
 	--toolbar-text: rgba(255, 255, 255, 0.85);
@@ -51,30 +51,30 @@
 	--color-text-muted: #808080;
 	--color-accent: #a594ff;
 	--color-accent-hover: #8b7ae0;
-	
+
 	--bean-bg: rgba(32, 32, 32, 0.5);
 	--bean-border: rgba(255, 255, 255, 0.1);
 	--bean-text: rgba(255, 255, 255, 0.7);
 	--bean-hover: rgba(254, 254, 254, 0.3);
-	
+
 	--article-bg: rgba(32, 32, 32, 0.5);
 	--article-text: #e0e0e0;
-	--article-banner-bg: rgba(32,32,32, 0.9);
+	--article-banner-bg: rgba(32, 32, 32, 0.9);
 	--article-banner-border: rgba(255, 255, 255, 0.15);
 	--article-banner-text: #e0e0e0;
 
 	--article-tool-bg: rgba(32, 32, 32, 0.9);
 	--article-tool-bg-solid: rgba(32, 32, 32, 1);
 	--article-tool-text: #e0e0e0;
-	
+
 	--glass-bg-light: rgba(40, 40, 60, 0.6);
 	--glass-bg-dark: rgba(20, 20, 30, 0.9);
 	--glass-border: rgba(255, 255, 255, 0.1);
 	--glass-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-	
+
 	--scrollbar-thumb: rgba(255, 255, 255, 0.2);
 	--scrollbar-thumb-hover: rgba(255, 255, 255, 0.4);
-	
+
 	--toolbar-bg: rgba(32, 32, 32, 0.9);
 	--toolbar-text: #e0e0e0;
 	--toolbar-hover: rgba(165, 148, 255, 0.2);
@@ -89,30 +89,30 @@
 		--color-text-muted: #808080;
 		--color-accent: #a594ff;
 		--color-accent-hover: #8b7ae0;
-		
+
 		--bean-bg: rgba(32, 32, 32, 0.5);
 		--bean-border: rgba(255, 255, 255, 0.1);
 		--bean-text: rgba(255, 255, 255, 0.7);
 		--bean-hover: rgba(254, 254, 254, 0.3);
-		
+
 		--article-bg: rgba(32, 32, 32, 0.5);
 		--article-text: #e0e0e0;
-		--article-banner-bg: rgba(32,32,32, 0.9);
+		--article-banner-bg: rgba(32, 32, 32, 0.9);
 		--article-banner-border: rgba(255, 255, 255, 0.15);
 		--article-banner-text: #e0e0e0;
 
 		--article-tool-bg: rgba(32, 32, 32, 0.9);
 		--article-tool-bg-solid: rgba(32, 32, 32, 1);
 		--article-tool-text: #e0e0e0;
-		
+
 		--glass-bg-light: rgba(40, 40, 60, 0.6);
 		--glass-bg-dark: rgba(20, 20, 30, 0.9);
 		--glass-border: rgba(255, 255, 255, 0.1);
 		--glass-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-		
+
 		--scrollbar-thumb: rgba(255, 255, 255, 0.2);
 		--scrollbar-thumb-hover: rgba(255, 255, 255, 0.4);
-		
+
 		--toolbar-bg: rgba(32, 32, 32, 0.9);
 		--toolbar-text: #e0e0e0;
 		--toolbar-hover: rgba(165, 148, 255, 0.2);
@@ -124,8 +124,8 @@ html {
 	height: 100%;
 	position: absolute;
 	--font-serif: Lora, "Noto Serif SC", serif;
-    --font-sans-serif: "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
-    --font-mono: "Cascadia Mono", Consolas, Monaco, monospace;
+	--font-sans-serif: "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+	--font-mono: "Cascadia Mono", Consolas, Monaco, monospace;
 }
 
 body {
@@ -248,29 +248,29 @@ a {
 
 /* Pagination Styles */
 .pagination-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin: 0 0 0 40px;
-    flex-shrink: 0;
-    font-family: var(--font-sans-serif);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+	margin: 0 0 0 40px;
+	flex-shrink: 0;
+	font-family: var(--font-sans-serif);
 }
 
 .pagination-next {
 	display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--bean-text);
+	align-items: center;
+	justify-content: center;
+	color: var(--bean-text);
 	border: 1px solid var(--bean-border);
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    transition: all .3s cubic-bezier(.68, 0, .33, 1);
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: 0 0 5px rgba(32, 32, 32, .1) !important;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	transition: all .3s cubic-bezier(.68, 0, .33, 1);
+	cursor: pointer;
+	text-decoration: none;
+	box-shadow: 0 0 5px rgba(32, 32, 32, .1) !important;
 }
 
 .pagination-next:hover {
@@ -338,18 +338,22 @@ a {
 
 		.banner-content {
 			border-radius: 0px !important;
-			border:none;
+			border: none;
 			border-bottom: solid 1px var(--article-banner-border);
 		}
 	}
-	
-	.modal .bean-read .article-banner.scrolled{
-		.publish-time,.author-name{
-			display:none;
+
+	.modal .bean-read .article-banner.scrolled {
+
+		.publish-time,
+		.author-name {
+			display: none;
 		}
-		.small-title{
+
+		.small-title {
 			display: block;
 		}
+
 		#banner-progressbar {
 			display: block;
 		}
@@ -434,41 +438,85 @@ a {
 	gap: 10px;
 	z-index: 1;
 	animation: toolbarFadeIn 0.5s ease-out;
-}
 
-.floating-toolbar .toolbar-btn {
-	width: 44px;
-	height: 44px;
-	border: none;
-	border-radius: 50%;
-	background-color: var(--toolbar-bg);
-	backdrop-filter: blur(20px);
-	color: var(--toolbar-text);
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-	border: 1px solid var(--glass-border);
-}
+	.toolbar-btn {
+		width: 44px;
+		height: 44px;
+		border: none;
+		border-radius: 25px;
+		background-color: var(--toolbar-bg);
+		backdrop-filter: blur(20px);
+		color: var(--toolbar-text);
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: width 0.3s ease-out;
+		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+		border: 1px solid var(--glass-border);
+	}
+
+	.search-btn {
+		position: relative;
+		display: flex; /* form元素需要显式设置 */
+		align-items: center;
+		justify-content: flex-end; /* svg默认靠右 */
+
+		svg {
+			flex-shrink: 0;
+			margin-right: 12px;
+			z-index: 1;
+			cursor: pointer;
+		}
+		input::-webkit-search-cancel-button {
+			-webkit-appearance: none; /* Removes the default styling */
+			display: none;          /* Hides the button entirely */
+		}
+	}
+
+	.search-btn .search-input {
+		position: absolute;
+		left: 12px;
+		right: 44px; /* 给svg留出空间 */
+		padding: 0;
+		border: none;
+		height: 0;
+		opacity: 0;
+		outline: none;
+		overflow: hidden;
+		font-size: 1.1em;
+		white-space: nowrap;
+		background-color: transparent;
+		color: inherit;
+		transition: height 0.3s ease-out, opacity 0.3s ease-out;
+	}
+
+	.search-btn:focus-within {
+		width: 240px;
+
+		.search-input {
+			height: 100%;
+			opacity: 1;
+		}
+	}
 
 
-.floating-toolbar .toolbar-btn svg {
-	width: 20px;
-	height: 20px;
-	transition: transform 0.3s;
-}
+	.toolbar-btn svg {
+		width: 20px;
+		height: 20px;
+		transition: transform 0.3s;
+	}
 
-.floating-toolbar .toolbar-btn:hover svg {
-	transform: scale(1.1);
-}
+	.toolbar-btn:hover svg {
+		transform: scale(1.1);
+	}
 
-/* Theme toggle button icon states */
-.floating-toolbar .theme-toggle .icon-sun,
-.floating-toolbar .theme-toggle .icon-moon,
-.floating-toolbar .theme-toggle .icon-auto {
-	display: none;
+	/* Theme toggle button icon states */
+	.theme-toggle .icon-sun,
+	.theme-toggle .icon-moon,
+	.theme-toggle .icon-auto {
+		display: none;
+	}
 }
 
 /* Show appropriate icon based on data-theme */
@@ -483,6 +531,7 @@ a {
 		opacity: 0;
 		transform: translateY(-20px);
 	}
+
 	to {
 		opacity: 1;
 		transform: translateY(0);
@@ -638,9 +687,9 @@ a {
 		height: 100%;
 	}
 
-	.floating-toolbar{
+	.floating-toolbar {
 		bottom: 20px;
-    	top: initial;
+		top: initial;
 	}
 
 	.container {
@@ -650,7 +699,7 @@ a {
 	}
 
 	.contained-containers {
-		margin-top: 40px;
+		margin-top: 20px;
 		height: auto;
 		flex-direction: row;
 		transform: translate(0, 0);
@@ -676,7 +725,7 @@ a {
 		margin-left: unset;
 		display: flex;
 		width: 90vw;
-		top: 5%;
+		top: 20px;
 		align-items: center;
 		height: 70px;
 	}

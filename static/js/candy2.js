@@ -48,6 +48,35 @@ function collapseBeanMain() {
     }
 }
 
+/**
+ * Perform site search using Bing
+ * Opens a new tab with Bing search restricted to current site
+ * @param {HTMLFormElement} form - The search form element
+ */
+window.performSiteSearch = function(form) {
+    const input = form.querySelector('.search-input');
+    const query = input.value.trim();
+    
+    if (!query) {
+        input.focus();
+        return;
+    }
+    
+    // Get current site domain
+    const siteDomain = window.location.hostname;
+    
+    // Build Bing search URL with site: operator
+    const searchQuery = encodeURIComponent(`${query} site:${siteDomain}`);
+    const bingUrl = `https://www.bing.com/search?q=${searchQuery}`;
+    
+    // Open in new tab
+    window.open(bingUrl, '_blank');
+    
+    // Clear input and blur to close the search bar
+    input.value = '';
+    input.blur();
+};
+
 // Initialize on DOM ready
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
