@@ -131,6 +131,7 @@ html {
 body {
 	margin: 0;
 	--mybg: url("/img/bg-pc.jpg");
+	--mybg-dark: url("/img/bg-pc-dark.jpg");
 
 	font-family: var(--font-serif);
 	background-image: var(--mybg);
@@ -140,6 +141,18 @@ body {
 	background-attachment: fixed;
 	width: 100vw;
 	overflow: hidden;
+}
+
+/* Dark theme background */
+[data-theme="dark"] body {
+	background-image: var(--mybg-dark);
+}
+
+/* Auto dark mode background - follows system preference when no explicit theme set */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme]) body {
+		background-image: var(--mybg-dark);
+	}
 }
 
 a {
@@ -683,6 +696,7 @@ a {
 	body {
 		width: 100vw;
 		--mybg: url(/img/bg-mobile.jpg);
+		--mybg-dark: url(/img/bg-mobile-dark.jpg);
 		height: 100%;
 	}
 
