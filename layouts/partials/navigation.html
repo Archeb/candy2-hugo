@@ -20,7 +20,7 @@
         {{ end }}
     </div>
     <div class="meta-info">
-        <span class="show">{{ .Site.Params.copyright | default "© 2025" }}</span>
+        <span class="show">{{ .Site.Params.copyright | safeHTML | default "© 2025" }}</span>
         <span class="hide">Theme Candy 2 By <a href="https://github.com/Archeb/candy2-hugo">Candy2-Hugo</a></span>
     </div>
 </div>
