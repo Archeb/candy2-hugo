@@ -158,6 +158,7 @@ function init() {
     setupProgressBar();
     setupHoverPreload();
     setupCommentCountMonitor();
+    setupArticleLightbox();
 
     // Initial state
     checkMobileMode();
@@ -283,6 +284,38 @@ function setupProgressBar() {
 
     // Initial update
     updateProgressBar();
+}
+
+/**
+ * Setup lightbox for images in article content
+ * Wraps images in <a> tags with data-fslightbox attribute
+ */
+function setupArticleLightbox() {
+    const articleContent = document.querySelector('.article-content');
+    if (!articleContent) return;
+    
+    const images = articleContent.querySelectorAll('img');
+    images.forEach((img) => {
+        // Skip if image is already wrapped in a lightbox link
+        if (img.closest('a[data-fslightbox]')) return;
+        
+        // Get the original image source
+        const src = img.src;
+        
+        // Create wrapper <a> tag
+        const wrapper = document.createElement('a');
+        wrapper.href = src;
+        wrapper.setAttribute('data-fslightbox', 'article-gallery');
+        
+        // Wrap the image
+        img.parentNode.insertBefore(wrapper, img);
+        wrapper.appendChild(img);
+    });
+    
+    // Refresh fslightbox to recognize newly added elements
+    if (typeof refreshFsLightbox === 'function') {
+        refreshFsLightbox();
+    }
 }
 
 /**
@@ -555,6 +588,9 @@ function handleGlobalClick(e) {
     if (modal) {
         const internalLink = e.target.closest("a[href]");
         if (internalLink && internalLink.href && !internalLink.target) {
+            // Skip lightbox links - let fslightbox handle them
+            if (internalLink.hasAttribute('data-fslightbox')) return;
+            
             const url = new URL(internalLink.href, window.location.origin);
             
             // Only intercept same-origin, non-anchor links
@@ -1017,6 +1053,7 @@ async function loadSinglePage(url, doc = null, updateHistory = true) {
     setupMobileScrollBehavior();
     setupTocHighlight();
     setupProgressBar();
+    setupArticleLightbox();
     
     // Execute scripts (comments, etc)
     const commentSection = newModalContent.querySelector('.article-comment');
