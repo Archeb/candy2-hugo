@@ -112,6 +112,11 @@
         }
     }
 
+    a[data-fslightbox] {
+        box-shadow: none !important;
+        background-color: transparent !important;
+    }
+
     // --- Lists ---
     ul,
     ol {
